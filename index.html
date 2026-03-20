@@ -5,469 +5,664 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UNOC – Uganda National Oil Company</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════════ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
 [data-theme="light"]{
-  --bg:#FAFAF8;
-  --bg2:#F4F0EB;
-  --bg3:#EDE7DD;
-  --card:#FFFFFF;
-  --border:#DDD7CE;
-  --text:#0F0D0A;
-  --text2:#3D3526;
-  --muted:#7A7060;
-  --inv-bg:#0F0D0A;
-  --inv-text:#FAFAF8;
-  --shadow:0 2px 16px rgba(0,0,0,0.06);
-  --shadow-lg:0 12px 56px rgba(0,0,0,0.14);
+  --bg:#FAFAF8;--bg2:#F3EFE8;--bg3:#E9E2D6;
+  --card:#FFFFFF;--border:#DDD6CC;
+  --text:#100E0A;--text2:#42392C;--muted:#7A7060;
+  --inv-bg:#100E0A;--inv-text:#FAFAF8;
+  --sh:0 2px 16px rgba(0,0,0,0.07);--sh-lg:0 16px 64px rgba(0,0,0,0.14);
 }
 [data-theme="dark"]{
-  --bg:#0C0A07;
-  --bg2:#141109;
-  --bg3:#1C180F;
-  --card:#161310;
-  --border:#2D2820;
-  --text:#F2EDE4;
-  --text2:#B8AFA0;
-  --muted:#6A6050;
-  --inv-bg:#F2EDE4;
-  --inv-text:#0C0A07;
-  --shadow:0 2px 16px rgba(0,0,0,0.35);
-  --shadow-lg:0 12px 56px rgba(0,0,0,0.55);
+  --bg:#0D0B08;--bg2:#15120D;--bg3:#1D1912;
+  --card:#161310;--border:#2A2419;
+  --text:#F0EBE0;--text2:#B0A898;--muted:#6A6050;
+  --inv-bg:#F0EBE0;--inv-text:#0D0B08;
+  --sh:0 2px 16px rgba(0,0,0,0.4);--sh-lg:0 16px 64px rgba(0,0,0,0.6);
 }
 :root{
-  --red:#C01818;
-  --red-dk:#9A1010;
-  --yellow:#F2B800;
-  --gold:#B87820;
-  --gold-lt:#D4952A;
-  --black:#0F0D0A;
+  --red:#C01818;--red-dk:#9A0E0E;--red-lt:rgba(192,24,24,0.12);
+  --yellow:#F2B800;--gold:#B87820;
+  --ease:cubic-bezier(.4,0,.2,1);
+  --dur:.28s;
 }
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background var(--dur),color var(--dur)}
+/* Sen = headings / bold */
+h1,h2,h3,h4,.eyebrow,.stat-num,.nav-logo-text,.btn-primary,.badge,
+.hero-stat-num,.leader-name,.spec-val,.metric-num,.job-title,
+.footer-col h4,.quick-title,.tender-ref,.news-title{font-family:'Sen',sans-serif}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--red);border-radius:2px}
 
-html{scroll-behavior:smooth}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background .3s,color .3s;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-
-/* SCROLLBAR */
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:var(--bg2)}
-::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+/* ── PROGRESS BAR ── */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(to right,var(--red),var(--yellow));z-index:9999;width:0%;transition:width .1s linear;border-radius:0 2px 2px 0}
 
 /* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(250,250,248,0.94);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border);transition:background .3s,border-color .3s}
-[data-theme="dark"] nav{background:rgba(12,10,7,0.94)}
-.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:70px}
-.nav-logo img{height:46px;width:auto;display:block}
+nav{position:fixed;top:3px;left:0;right:0;z-index:500;background:rgba(250,250,248,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:all var(--dur)}
+[data-theme="dark"] nav{background:rgba(13,11,8,0.93)}
+nav.scrolled{top:0;box-shadow:var(--sh)}
+.nav-inner{max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:68px}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo img{height:44px;width:auto}
 .nav-links{display:flex;align-items:center;gap:2px;list-style:none}
-.nav-links a{font-size:13px;font-weight:500;letter-spacing:0.03em;color:var(--text2);text-decoration:none;padding:7px 14px;border-radius:6px;transition:color .2s,background .2s}
-.nav-links a:hover{color:var(--text);background:var(--bg3)}
-.nav-links .active > a{color:var(--red);font-weight:600}
-.nav-cta{display:flex;align-items:center;gap:10px}
-.btn{display:inline-flex;align-items:center;gap:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.03em;border:none;border-radius:7px;cursor:pointer;transition:all .2s;text-decoration:none}
-.btn-primary{background:var(--red);color:#fff;padding:10px 22px}
-.btn-primary:hover{background:var(--red-dk);transform:translateY(-1px);box-shadow:0 4px 16px rgba(192,24,24,0.35)}
-.btn-ghost{background:transparent;color:var(--text2);padding:10px 16px;border:1px solid var(--border)}
-.btn-ghost:hover{border-color:var(--text2);color:var(--text)}
-.btn-outline-white{background:transparent;color:#fff;padding:12px 28px;border:1.5px solid rgba(255,255,255,0.6)}
-.btn-outline-white:hover{background:rgba(255,255,255,0.12);border-color:#fff}
-.btn-gold{background:var(--yellow);color:var(--black);padding:14px 32px;font-size:14px;border-radius:8px}
-.btn-gold:hover{background:#FFD000;transform:translateY(-2px);box-shadow:0 6px 24px rgba(242,184,0,0.4)}
-#themeBtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--border);background:var(--bg2);font-size:16px;cursor:pointer;transition:all .2s;flex-shrink:0}
-#themeBtn:hover{border-color:var(--gold)}
+.nav-links a{font-family:'Sen',sans-serif;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--muted);text-decoration:none;padding:7px 13px;border-radius:7px;transition:all .2s;position:relative}
+.nav-links a:hover{color:var(--text);background:var(--bg2)}
+.nav-links li.active a{color:var(--red)}
+.nav-links li.active a::after{content:'';position:absolute;bottom:-2px;left:13px;right:13px;height:2px;background:var(--red);border-radius:1px}
+.nav-right{display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Sen',sans-serif;font-weight:700;border:none;border-radius:8px;cursor:pointer;text-decoration:none;transition:all var(--dur);white-space:nowrap}
+.btn-sm{font-size:13px;padding:9px 18px}
+.btn-md{font-size:14px;padding:11px 24px}
+.btn-lg{font-size:15px;padding:13px 32px}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover{background:var(--red-dk);transform:translateY(-1px);box-shadow:0 6px 20px rgba(192,24,24,.35)}
+.btn-secondary{background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--red);color:var(--red)}
+.btn-ghost-dark{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(8px)}
+.btn-ghost-dark:hover{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.5)}
+.btn-yellow{background:var(--yellow);color:#0D0B08}
+.btn-yellow:hover{background:#FFD000;transform:translateY(-2px);box-shadow:0 8px 24px rgba(242,184,0,.35)}
+#themeBtn{width:38px;height:38px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:17px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+#themeBtn:hover{border-color:var(--red);background:var(--red-lt)}
+.menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--text);font-size:22px;padding:8px;border-radius:7px;transition:background .2s}
+.menu-btn:hover{background:var(--bg2)}
+
+/* ── MOBILE DRAWER ── */
+.mobile-drawer{position:fixed;top:0;right:0;bottom:0;width:300px;background:var(--card);z-index:600;padding:24px;display:flex;flex-direction:column;gap:8px;transform:translateX(110%);transition:transform .35s var(--ease);box-shadow:var(--sh-lg)}
+.mobile-drawer.open{transform:translateX(0)}
+.drawer-close{align-self:flex-end;background:var(--bg2);border:none;width:38px;height:38px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--text);margin-bottom:16px;transition:all .2s}
+.drawer-close:hover{background:var(--red);color:#fff}
+.mobile-drawer a{font-family:'Sen',sans-serif;font-weight:700;font-size:16px;color:var(--text2);text-decoration:none;padding:13px 16px;border-radius:10px;transition:all .2s;display:block}
+.mobile-drawer a:hover{background:var(--red-lt);color:var(--red)}
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:590;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(3px)}
+.drawer-overlay.open{opacity:1;pointer-events:all}
 
 /* ── HERO ── */
-.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden;padding-top:70px}
-.hero-bg{position:absolute;inset:0;background:linear-gradient(160deg,#0A0806 0%,#1A1008 35%,#2A1800 60%,#0F0A05 100%)}
-.hero-img{position:absolute;inset:0;background:url('1772798855169.jpeg') center/cover no-repeat;opacity:0.32;mix-blend-mode:luminosity}
-.hero-gradient{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.90) 0%,rgba(0,0,0,0.55) 40%,rgba(0,0,0,0.1) 100%)}
-.hero-accent{position:absolute;top:15%;right:8%;width:380px;height:380px;border-radius:50%;background:radial-gradient(circle,rgba(192,24,24,0.18) 0%,transparent 70%);animation:pulse 4s ease-in-out infinite}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:0.7}50%{transform:scale(1.1);opacity:1}}
-.hero-content{position:relative;z-index:2;max-width:1320px;margin:0 auto;padding:0 40px 100px;width:100%}
-.hero-tag{display:inline-flex;align-items:center;gap:10px;background:rgba(192,24,24,0.2);border:1px solid rgba(192,24,24,0.4);color:#FF6B6B;font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;padding:8px 16px;border-radius:40px;margin-bottom:28px}
-.hero-tag .dot{width:6px;height:6px;border-radius:50%;background:#FF6B6B;animation:blink 1.5s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(52px,6vw,88px);font-weight:900;line-height:1.02;color:#FFFFFF;max-width:820px;margin-bottom:24px;letter-spacing:-0.02em}
-.hero-h1 em{font-style:italic;color:var(--yellow)}
-.hero-desc{font-size:18px;font-weight:300;color:rgba(255,255,255,0.72);max-width:540px;line-height:1.7;margin-bottom:44px}
-.hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.hero-scroll{position:absolute;bottom:36px;right:40px;display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:0.1em;text-transform:uppercase}
-.scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,rgba(255,255,255,0.4),transparent);animation:scrollAnim 2s ease-in-out infinite}
-@keyframes scrollAnim{0%{transform:translateY(-10px);opacity:0}50%{opacity:1}100%{transform:translateY(10px);opacity:0}}
-.hero-stats-bar{position:absolute;bottom:0;left:0;right:0;z-index:3;background:rgba(15,13,10,0.85);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,0.08)}
-.hero-stats-inner{max-width:1320px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:repeat(4,1fr);gap:0}
-.hero-stat{padding:22px 0;border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;gap:4px;padding-left:24px}
-.hero-stat:first-child{padding-left:0}
-.hero-stat:last-child{border-right:none}
-.hero-stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#FFFFFF}
-.hero-stat-num span{color:var(--yellow)}
-.hero-stat-label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.45)}
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:#0A0806}
+.hero-img{position:absolute;inset:0;background:url('1772798855169.jpeg') center/cover no-repeat;opacity:.3;mix-blend-mode:luminosity}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(160deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.35) 45%,rgba(0,0,0,.05) 100%)}
+.hero-grad2{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.9) 0%,rgba(0,0,0,.5) 35%,transparent 70%)}
+.hero-glow{position:absolute;top:10%;right:5%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(192,24,24,.2) 0%,transparent 65%);animation:glowPulse 5s ease-in-out infinite}
+@keyframes glowPulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.15);opacity:1}}
+.hero-content{position:relative;z-index:2;max-width:1320px;margin:0 auto;width:100%;padding:0 36px 0}
+.hero-tag{display:inline-flex;align-items:center;gap:10px;background:rgba(192,24,24,.18);border:1px solid rgba(192,24,24,.4);color:#FF7070;font-family:'Sen',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:7px 16px;border-radius:40px;margin-bottom:24px}
+.hero-tag .live{width:7px;height:7px;border-radius:50%;background:#FF7070;animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero h1{font-family:'Sen',sans-serif;font-size:clamp(48px,6.5vw,90px);font-weight:800;color:#fff;line-height:1.01;letter-spacing:-.025em;margin-bottom:22px}
+.hero h1 em{font-style:italic;color:var(--yellow);display:block}
+.hero-sub{font-size:18px;font-weight:300;color:rgba(255,255,255,.7);max-width:560px;line-height:1.75;margin-bottom:40px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:72px}
+.hero-scroll-hint{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.35);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:0;padding-bottom:36px}
+.scroll-line{width:40px;height:1px;background:linear-gradient(to right,rgba(255,255,255,.4),transparent)}
 
-/* ── SECTION BASICS ── */
+/* stats bar */
+.stats-bar{position:relative;z-index:3;background:rgba(10,8,6,.88);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,.06)}
+.stats-bar-inner{max-width:1320px;margin:0 auto;padding:0 36px;display:grid;grid-template-columns:repeat(4,1fr)}
+.stat-item{padding:28px 0 28px 28px;border-right:1px solid rgba(255,255,255,.07);cursor:default;transition:background .25s}
+.stat-item:hover{background:rgba(255,255,255,.03)}
+.stat-item:first-child{padding-left:0}
+.stat-item:last-child{border-right:none}
+.stat-num{font-family:'Sen',sans-serif;font-size:32px;font-weight:800;color:#fff;line-height:1}
+.stat-num sup{font-size:18px;color:var(--yellow)}
+.stat-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.42);margin-top:5px}
+
+/* ── TICKER ── */
+.ticker{background:var(--red);padding:11px 0;overflow:hidden;display:flex;align-items:center}
+.ticker-label{flex-shrink:0;background:rgba(0,0,0,.2);padding:0 20px;font-family:'Sen',sans-serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#fff;white-space:nowrap;align-self:stretch;display:flex;align-items:center}
+.ticker-track-wrap{overflow:hidden;flex:1}
+.ticker-track{display:flex;gap:64px;width:max-content;animation:ticker 50s linear infinite}
+@keyframes ticker{to{transform:translateX(-50%)}}
+.ticker-item{font-family:'Sen',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,.9);white-space:nowrap}
+.ticker-item::before{content:'◆';margin-right:10px;font-size:7px;opacity:.6}
+
+/* ── CONTAINERS ── */
+.wrap{max-width:1320px;margin:0 auto;padding:0 36px}
 section{padding:96px 0}
-.container{max-width:1320px;margin:0 auto;padding:0 40px}
-.section-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--red);margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.section-eyebrow::before{content:'';display:block;width:28px;height:2px;background:var(--red)}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(36px,4vw,54px);font-weight:700;line-height:1.1;letter-spacing:-0.02em;color:var(--text);margin-bottom:18px}
-.section-sub{font-size:17px;font-weight:300;color:var(--muted);line-height:1.7;max-width:560px}
-.divider{width:64px;height:3px;background:linear-gradient(to right,var(--red),var(--yellow));border-radius:2px;margin-bottom:32px}
+.section-label{display:flex;align-items:center;gap:10px;font-family:'Sen',sans-serif;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:14px}
+.section-label::before{content:'';width:26px;height:2px;background:var(--red);border-radius:1px}
+h2{font-family:'Sen',sans-serif;font-size:clamp(32px,3.8vw,50px);font-weight:800;letter-spacing:-.025em;line-height:1.08;color:var(--text);margin-bottom:14px}
+.lead{font-size:17px;font-weight:300;color:var(--muted);line-height:1.8;max-width:560px}
+.divider{width:56px;height:3px;background:linear-gradient(to right,var(--red),var(--yellow));border-radius:2px;margin:20px 0 36px}
 
 /* ── ABOUT ── */
-.about{background:var(--bg)}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-.about-img-wrap{position:relative}
-.about-main-img{width:100%;border-radius:16px;object-fit:cover;height:520px;display:block}
-.about-badge{position:absolute;bottom:-24px;right:-24px;background:var(--red);color:#fff;border-radius:14px;padding:28px 32px;box-shadow:0 12px 48px rgba(192,24,24,0.35)}
-.about-badge-num{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;line-height:1}
-.about-badge-label{font-size:13px;font-weight:500;opacity:0.85;margin-top:4px}
-.about-text-tag{display:inline-block;background:var(--bg3);color:var(--red);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:6px 14px;border-radius:4px;margin-bottom:20px}
-.about-body{font-size:16px;font-weight:300;line-height:1.8;color:var(--text2);margin-bottom:24px}
-.about-pillars{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
-.pillar{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;border-left:3px solid var(--red)}
-.pillar h4{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:8px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:center}
+.about-img-stack{position:relative;padding-bottom:48px}
+.about-img-main{width:100%;height:520px;object-fit:cover;border-radius:18px;display:block;box-shadow:var(--sh-lg)}
+.about-img-badge{position:absolute;bottom:0;right:-20px;background:var(--red);border-radius:16px;padding:24px 28px;color:#fff;box-shadow:0 16px 48px rgba(192,24,24,.4);text-align:center}
+.about-img-badge .badge-num{font-family:'Sen',sans-serif;font-size:52px;font-weight:800;line-height:1}
+.about-img-badge .badge-sub{font-size:13px;font-weight:500;opacity:.85;margin-top:2px}
+.about-img-accent{position:absolute;top:24px;left:-18px;width:80px;height:80px;border-radius:12px;background:var(--yellow);opacity:.18;transform:rotate(12deg)}
+.pillars{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px}
+.pillar{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--red);border-radius:12px;padding:22px 20px;transition:all .25s}
+.pillar:hover{border-left-color:var(--yellow);box-shadow:var(--sh)}
+.pillar h4{font-family:'Sen',sans-serif;font-size:15px;font-weight:700;margin-bottom:7px}
 .pillar p{font-size:13px;color:var(--muted);line-height:1.6}
 
-/* ── MANDATE ── */
-.mandate{background:var(--inv-bg);color:var(--inv-text);padding:80px 0}
-.mandate-inner{max-width:1320px;margin:0 auto;padding:0 40px}
+/* ── MANDATE BAND ── */
+.mandate{background:var(--inv-bg);padding:80px 0}
 .mandate-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:56px}
-.mandate-card{background:rgba(255,255,255,0.04);padding:48px 36px;border-top:2px solid transparent;transition:all .3s;cursor:default}
-.mandate-card:hover{background:rgba(255,255,255,0.07);border-top-color:var(--yellow)}
-.mandate-icon{width:52px;height:52px;border-radius:12px;background:rgba(242,184,0,0.12);display:flex;align-items:center;justify-content:center;margin-bottom:28px;font-size:26px}
-.mandate-card h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:14px;color:var(--inv-text)}
-.mandate-card p{font-size:15px;line-height:1.75;color:rgba(255,255,255,0.55)}
+.m-card{background:rgba(255,255,255,.04);border-top:2px solid transparent;padding:44px 36px;transition:all .3s;cursor:default}
+.m-card:hover{background:rgba(255,255,255,.07);border-top-color:var(--yellow)}
+.m-icon{width:52px;height:52px;border-radius:14px;background:rgba(242,184,0,.12);display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:24px;transition:transform .3s}
+.m-card:hover .m-icon{transform:scale(1.1) rotate(-5deg)}
+.m-card h3{font-family:'Sen',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:12px}
+.m-card p{font-size:14px;line-height:1.75;color:rgba(255,255,255,.5)}
 
-/* ── OPERATIONS ── */
-.operations{background:var(--bg2)}
-.ops-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:12px;padding:6px;margin:40px 0 0}
-.ops-tab{flex:1;padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.02em;border:none;background:none;border-radius:8px;cursor:pointer;color:var(--muted);transition:all .25s}
-.ops-tab.active{background:var(--card);color:var(--red);box-shadow:var(--shadow)}
-.ops-panels{margin-top:24px}
-.ops-panel{display:none;animation:fadeUp .35s ease}
-.ops-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.ops-img{width:100%;height:420px;object-fit:cover;border-radius:14px;display:block}
-.ops-panel-tag{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--red);margin-bottom:12px}
-.ops-panel h3{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;line-height:1.1;margin-bottom:16px}
-.ops-panel-desc{font-size:16px;line-height:1.8;color:var(--text2);margin-bottom:28px}
-.ops-specs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
-.spec{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px}
-.spec-val{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--red)}
-.spec-key{font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:0.04em}
-.ops-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(192,24,24,0.1);color:var(--red);font-size:12px;font-weight:600;padding:7px 14px;border-radius:40px;border:1px solid rgba(192,24,24,0.2)}
-.status-dot{width:7px;height:7px;border-radius:50%;background:#22C55E;animation:blink 1.5s infinite}
-
-/* ── LEADERSHIP ── */
-.leadership{background:var(--bg)}
-.leadership-intro{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:64px}
-.leadership-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
-.leader-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s;cursor:pointer}
-.leader-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
-.leader-img{width:100%;height:260px;object-fit:cover;object-position:center top;display:block;filter:grayscale(20%);transition:filter .3s}
-.leader-card:hover .leader-img{filter:grayscale(0%)}
-.leader-info{padding:24px}
-.leader-name{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:4px}
-.leader-title{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0.04em;line-height:1.5}
-.leader-dept{display:inline-block;background:var(--bg2);color:var(--red);font-size:11px;font-weight:600;letter-spacing:0.06em;padding:4px 10px;border-radius:4px;margin-top:12px}
-.leader-card.featured{grid-column:span 2;display:grid;grid-template-columns:1fr 1fr}
-.leader-card.featured .leader-img{height:100%;min-height:300px}
-.leader-card.featured .leader-info{padding:40px 36px;display:flex;flex-direction:column;justify-content:center}
-.leader-card.featured .leader-name{font-size:26px}
-.leader-card.featured .leader-title{font-size:14px;line-height:1.6}
-.leader-quote{font-size:15px;font-style:italic;color:var(--text2);line-height:1.7;margin:16px 0;border-left:3px solid var(--yellow);padding-left:16px}
+/* ── OPERATIONS TABS ── */
+.ops-bg{background:var(--bg2)}
+.ops-tabs-wrap{display:flex;background:var(--bg3);border-radius:12px;padding:6px;gap:4px;margin-top:40px;overflow-x:auto}
+.ops-tab{flex:1;min-width:120px;padding:11px 16px;font-family:'Sen',sans-serif;font-size:13px;font-weight:700;border:none;border-radius:8px;cursor:pointer;background:none;color:var(--muted);transition:all .25s;white-space:nowrap}
+.ops-tab.active{background:var(--card);color:var(--red);box-shadow:var(--sh)}
+.ops-panels{margin-top:20px}
+.ops-panel{display:none;grid-template-columns:1fr 1fr;gap:64px;align-items:center;animation:fadeUp .35s var(--ease)}
+.ops-panel.active{display:grid}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.ops-img{width:100%;height:420px;object-fit:cover;border-radius:16px;box-shadow:var(--sh-lg);display:block}
+.ops-tag{font-family:'Sen',sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
+.ops-panel h3{font-family:'Sen',sans-serif;font-size:clamp(28px,3vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:16px}
+.ops-specs{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0}
+.spec{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:border-color .2s}
+.spec:hover{border-color:var(--red)}
+.spec-val{font-family:'Sen',sans-serif;font-size:24px;font-weight:800;color:var(--red)}
+.spec-key{font-size:12px;color:var(--muted);margin-top:4px;letter-spacing:.03em}
+.status-badge{display:inline-flex;align-items:center;gap:8px;background:var(--red-lt);color:var(--red);font-family:'Sen',sans-serif;font-size:12px;font-weight:700;padding:7px 16px;border-radius:40px;border:1px solid rgba(192,24,24,.2)}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#22C55E;animation:blink 1.6s infinite}
+.status-dot.amber{background:#FBBF24}
 
 /* ── PARTNERS ── */
-.partners{background:var(--bg2);padding:72px 0}
-.partners-logos{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
-.partner-tile{background:var(--card);padding:48px 40px;display:flex;flex-direction:column;align-items:flex-start;gap:20px;border:1px solid var(--border);transition:box-shadow .25s}
-.partner-tile:hover{box-shadow:var(--shadow-lg)}
-.partner-tile img{height:52px;width:auto;object-fit:contain;display:block;filter:grayscale(30%);transition:filter .3s}
+.partners-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px}
+.partner-tile{background:var(--card);border:1px solid var(--border);padding:44px 36px;display:flex;flex-direction:column;gap:18px;transition:all .25s;cursor:pointer}
+.partner-tile:hover{box-shadow:var(--sh-lg);z-index:1;transform:translateY(-3px)}
+.partner-tile img{height:48px;width:auto;object-fit:contain;filter:grayscale(25%);transition:filter .3s}
 .partner-tile:hover img{filter:grayscale(0%)}
-.partner-desc{font-size:14px;color:var(--muted);line-height:1.7}
-.partner-role{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--red)}
+.partner-role{font-family:'Sen',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red)}
+.partner-tile p{font-size:14px;color:var(--muted);line-height:1.7}
 
-/* ── OUR PEOPLE ── */
-.people{background:var(--bg)}
-.people-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:20px;overflow:hidden;box-shadow:var(--shadow-lg);margin-top:56px}
+/* ── LEADERSHIP ── */
+.leadership-header{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:56px}
+.leaders-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.leader-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--sh);transition:all .3s;cursor:pointer;position:relative}
+.leader-card:hover{transform:translateY(-7px);box-shadow:var(--sh-lg)}
+.leader-card::after{content:'View Profile';position:absolute;inset:0;background:rgba(192,24,24,.85);color:#fff;font-family:'Sen',sans-serif;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .25s;border-radius:16px}
+.leader-card:hover::after{opacity:1}
+.leader-img{width:100%;height:260px;object-fit:cover;object-position:center top;display:block;filter:grayscale(15%);transition:filter .3s}
+.leader-card:hover .leader-img{filter:grayscale(0%)}
+.leader-info{padding:22px 20px}
+.leader-name{font-family:'Sen',sans-serif;font-size:17px;font-weight:800;margin-bottom:4px}
+.leader-role{font-size:12px;color:var(--muted);line-height:1.5}
+.leader-tag{display:inline-block;background:var(--bg2);color:var(--red);font-family:'Sen',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:5px;margin-top:10px}
+/* Featured CEO */
+.leader-featured{grid-column:span 2;display:grid;grid-template-columns:1fr 1fr}
+.leader-featured::after{content:none}
+.leader-featured .leader-img{height:100%;min-height:320px}
+.leader-featured .leader-info{padding:40px 36px;display:flex;flex-direction:column;justify-content:center}
+.leader-featured .leader-name{font-size:26px}
+.leader-featured .leader-role{font-size:14px;line-height:1.6;margin-bottom:12px}
+.ceo-quote{font-size:15px;font-style:italic;color:var(--text2);line-height:1.75;border-left:3px solid var(--yellow);padding-left:16px;margin:16px 0}
+.leader-featured:hover{transform:none;box-shadow:var(--sh-lg)}
+.leader-featured:hover::after{opacity:0}
+
+/* ── LEADER MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:800;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--card);border-radius:20px;max-width:720px;width:100%;max-height:90vh;overflow-y:auto;position:relative;transform:scale(.94) translateY(20px);transition:transform .35s var(--ease);box-shadow:var(--sh-lg)}
+.modal-overlay.open .modal{transform:scale(1) translateY(0)}
+.modal-close{position:absolute;top:20px;right:20px;width:38px;height:38px;border-radius:50%;background:var(--bg2);border:none;cursor:pointer;font-size:18px;color:var(--text);transition:all .2s;z-index:1}
+.modal-close:hover{background:var(--red);color:#fff}
+.modal-hero{display:grid;grid-template-columns:200px 1fr;gap:0}
+.modal-photo{width:200px;height:260px;object-fit:cover;object-position:center top;border-radius:20px 0 0 0;display:block}
+.modal-header{background:var(--inv-bg);padding:36px 36px 28px;display:flex;flex-direction:column;justify-content:flex-end;border-radius:0 20px 0 0}
+.modal-name{font-family:'Sen',sans-serif;font-size:26px;font-weight:800;color:var(--inv-text);margin-bottom:4px}
+.modal-title{font-size:14px;color:rgba(255,255,255,.6)}
+.modal-dept-tag{display:inline-block;background:var(--red);color:#fff;font-family:'Sen',sans-serif;font-size:11px;font-weight:700;padding:5px 14px;border-radius:5px;margin-top:12px}
+.modal-body{padding:32px 36px}
+.modal-bio{font-size:15px;line-height:1.8;color:var(--text2);margin-bottom:24px}
+.modal-facts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.modal-fact{background:var(--bg2);border-radius:10px;padding:16px}
+.modal-fact strong{font-family:'Sen',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+.modal-fact span{font-size:14px;font-weight:500}
+
+/* ── PEOPLE ── */
+.people-split{display:grid;grid-template-columns:1fr 1fr;border-radius:20px;overflow:hidden;box-shadow:var(--sh-lg);margin-top:56px}
 .people-visual{position:relative;overflow:hidden}
-.people-visual img{width:100%;height:600px;object-fit:cover;display:block}
-.people-visual-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,0.3),transparent)}
-.people-content{background:var(--inv-bg);padding:72px 60px;display:flex;flex-direction:column;justify-content:center}
-.people-content .section-eyebrow{color:var(--yellow)}
-.people-content .section-eyebrow::before{background:var(--yellow)}
-.people-content .section-title{color:var(--inv-text)}
-.people-content .section-sub{color:rgba(255,255,255,0.6);margin-bottom:40px}
-.people-stats{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:36px 0}
-.p-stat-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:var(--yellow)}
-.p-stat-label{font-size:13px;color:rgba(255,255,255,0.55);margin-top:4px}
-.people-values{display:flex;flex-direction:column;gap:14px}
-.value-row{display:flex;align-items:center;gap:14px;font-size:15px;color:rgba(255,255,255,0.75)}
-.value-row::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--yellow);flex-shrink:0}
+.people-visual img{width:100%;height:580px;object-fit:cover;display:block;transition:transform .5s var(--ease)}
+.people-visual:hover img{transform:scale(1.04)}
+.people-visual-grad{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.25),transparent)}
+.people-panel{background:var(--inv-bg);padding:64px 56px;display:flex;flex-direction:column;justify-content:center}
+.people-panel .section-label{color:var(--yellow)}
+.people-panel .section-label::before{background:var(--yellow)}
+.people-panel h2{color:var(--inv-text)}
+.people-panel .lead{color:rgba(255,255,255,.55);margin-bottom:36px}
+.p-stats{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:36px}
+.p-stat .metric-num{font-family:'Sen',sans-serif;font-size:38px;font-weight:800;color:var(--yellow)}
+.p-stat .metric-label{font-size:13px;color:rgba(255,255,255,.5);margin-top:3px}
+.values-list{display:flex;flex-direction:column;gap:12px}
+.values-list li{display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(255,255,255,.7);list-style:none}
+.values-list li::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--yellow);flex-shrink:0}
 
 /* ── LOCAL CONTENT ── */
-.local{background:var(--bg2)}
-.local-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
-.local-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px 32px;position:relative;overflow:hidden}
-.local-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
-.local-card:nth-child(1)::before{background:var(--red)}
-.local-card:nth-child(2)::before{background:var(--yellow)}
-.local-card:nth-child(3)::before{background:#22C55E}
-.local-card-num{font-family:'Playfair Display',serif;font-size:56px;font-weight:900;color:var(--text);opacity:0.07;position:absolute;top:20px;right:24px;line-height:1}
-.local-card h3{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:12px}
-.local-card p{font-size:15px;line-height:1.75;color:var(--text2)}
-.local-card .lc-icon{font-size:32px;margin-bottom:20px}
+.lc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px}
+.lc-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:36px 30px;position:relative;overflow:hidden;transition:all .3s}
+.lc-card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg)}
+.lc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.lc-card:nth-child(1)::before{background:var(--red)}
+.lc-card:nth-child(2)::before{background:var(--yellow)}
+.lc-card:nth-child(3)::before{background:#22C55E}
+.lc-num{font-family:'Sen',sans-serif;font-size:72px;font-weight:800;color:var(--text);opacity:.05;position:absolute;top:12px;right:20px;line-height:1;pointer-events:none}
+.lc-icon{font-size:32px;margin-bottom:20px}
+.lc-card h3{font-family:'Sen',sans-serif;font-size:20px;font-weight:800;margin-bottom:10px}
+.lc-card p{font-size:14px;line-height:1.75;color:var(--muted)}
 
 /* ── SUSTAINABILITY ── */
-.sustainability{background:var(--bg);overflow:hidden}
-.sust-grid{display:grid;grid-template-columns:5fr 7fr;gap:0;border-radius:20px;overflow:hidden;box-shadow:var(--shadow-lg);margin-top:56px}
-.sust-left{background:linear-gradient(135deg,var(--red) 0%,#8A0D0D 100%);padding:64px 52px;color:#fff}
-.sust-left h3{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;line-height:1.15;margin-bottom:20px}
-.sust-left p{font-size:15px;line-height:1.8;color:rgba(255,255,255,0.75);margin-bottom:36px}
-.sust-pillars{display:flex;flex-direction:column;gap:16px}
-.sust-pillar{display:flex;align-items:flex-start;gap:16px;padding:18px;background:rgba(255,255,255,0.08);border-radius:10px}
-.sust-pillar-icon{font-size:22px;flex-shrink:0;margin-top:2px}
-.sust-pillar h4{font-size:14px;font-weight:700;margin-bottom:4px}
-.sust-pillar p{font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6}
-.sust-right{display:grid;grid-template-columns:1fr 1fr;gap:0}
-.sust-metric{background:var(--bg2);padding:44px 36px;border-bottom:1px solid var(--border);border-right:1px solid var(--border)}
+.sust-grid{display:grid;grid-template-columns:5fr 7fr;border-radius:20px;overflow:hidden;box-shadow:var(--sh-lg);margin-top:56px}
+.sust-left{background:linear-gradient(145deg,var(--red) 0%,#7A0A0A 100%);padding:60px 48px;color:#fff}
+.sust-left h3{font-family:'Sen',sans-serif;font-size:32px;font-weight:800;line-height:1.15;margin-bottom:18px}
+.sust-left p{font-size:15px;line-height:1.8;color:rgba(255,255,255,.7);margin-bottom:36px}
+.sust-pillars{display:flex;flex-direction:column;gap:14px}
+.sust-pillar{display:flex;gap:16px;padding:18px;background:rgba(255,255,255,.08);border-radius:12px;transition:background .25s}
+.sust-pillar:hover{background:rgba(255,255,255,.14)}
+.sust-pillar-ico{font-size:22px;flex-shrink:0;margin-top:2px}
+.sust-pillar h4{font-family:'Sen',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px}
+.sust-pillar p{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6}
+.sust-right{display:grid;grid-template-columns:1fr 1fr}
+.sust-metric{background:var(--bg2);padding:40px 32px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);transition:background .25s}
+.sust-metric:hover{background:var(--bg3)}
 .sust-metric:nth-child(2n){border-right:none}
 .sust-metric:nth-child(3),.sust-metric:nth-child(4){border-bottom:none}
-.sust-metric-num{font-family:'Playfair Display',serif;font-size:42px;font-weight:900;color:var(--text);margin-bottom:6px}
-.sust-metric-label{font-size:13px;color:var(--muted);line-height:1.5}
+.metric-num{font-family:'Sen',sans-serif;font-size:38px;font-weight:800;color:var(--text)}
+.metric-label{font-size:13px;color:var(--muted);line-height:1.5;margin-top:4px}
+
+/* ── ACCORDION ── */
+.faq-bg{background:var(--bg2)}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:56px;align-items:start}
+.faq-list{display:flex;flex-direction:column;gap:8px}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow .25s}
+.faq-item.open{box-shadow:var(--sh)}
+.faq-q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;background:none;border:none;cursor:pointer;text-align:left;font-family:'Sen',sans-serif;font-size:15px;font-weight:700;color:var(--text);transition:color .2s}
+.faq-q:hover{color:var(--red)}
+.faq-arrow{width:28px;height:28px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .3s;flex-shrink:0;color:var(--muted)}
+.faq-item.open .faq-arrow{background:var(--red);color:#fff;transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s var(--ease),padding .3s}
+.faq-a-inner{padding:0 24px 22px;font-size:14px;line-height:1.8;color:var(--muted)}
+.faq-item.open .faq-a{max-height:300px}
 
 /* ── NEWS ── */
-.news{background:var(--bg2)}
-.news-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:20px}
-.news-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:24px}
-.news-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:transform .25s,box-shadow .25s}
-.news-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
-.news-img{width:100%;height:220px;object-fit:cover;display:block}
-.news-card.featured .news-img{height:320px}
-.news-body{padding:28px}
-.news-cat{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
-.news-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;line-height:1.3;margin-bottom:10px}
-.news-card.featured .news-title{font-size:26px}
-.news-excerpt{font-size:14px;line-height:1.7;color:var(--muted);margin-bottom:16px}
+.news-bg{background:var(--bg)}
+.news-filter{display:flex;gap:8px;flex-wrap:wrap;margin-top:36px;margin-bottom:32px}
+.news-filter-btn{font-family:'Sen',sans-serif;font-size:13px;font-weight:700;padding:8px 18px;border-radius:30px;border:1.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;transition:all .2s}
+.news-filter-btn:hover{border-color:var(--red);color:var(--red)}
+.news-filter-btn.active{background:var(--red);border-color:var(--red);color:#fff}
+.news-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:20px}
+.news-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all .3s;cursor:pointer}
+.news-card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg)}
+.news-img{width:100%;height:220px;object-fit:cover;display:block;transition:transform .4s}
+.news-card:hover .news-img{transform:scale(1.04)}
+.news-card.featured .news-img{height:300px}
+.news-body{padding:26px}
+.news-cat{font-family:'Sen',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:8px}
+.news-title{font-family:'Sen',sans-serif;font-size:18px;font-weight:800;line-height:1.3;margin-bottom:8px;color:var(--text)}
+.news-card.featured .news-title{font-size:22px}
+.news-excerpt{font-size:14px;line-height:1.7;color:var(--muted);margin-bottom:14px}
 .news-meta{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
-.news-meta .sep{opacity:0.4}
-.read-more{font-size:13px;font-weight:600;color:var(--red);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-top:12px}
-.read-more:hover{gap:10px}
+.news-meta .sep{opacity:.35}
+.read-link{font-family:'Sen',sans-serif;font-size:13px;font-weight:700;color:var(--red);text-decoration:none;display:inline-flex;align-items:center;gap:6px;margin-top:12px;transition:gap .2s}
+.read-link:hover{gap:10px}
 
 /* ── CAREERS ── */
-.careers{background:var(--inv-bg);color:var(--inv-text);padding:96px 0;position:relative;overflow:hidden}
-.careers::before{content:'';position:absolute;top:-80px;right:-80px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle,rgba(192,24,24,0.15) 0%,transparent 70%)}
-.careers::after{content:'';position:absolute;bottom:-100px;left:-60px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(242,184,0,0.1) 0%,transparent 70%)}
-.careers-inner{max-width:1320px;margin:0 auto;padding:0 40px;position:relative;z-index:1}
-.careers-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-.careers .section-eyebrow{color:var(--yellow)}
-.careers .section-eyebrow::before{background:var(--yellow)}
-.careers .section-title{color:var(--inv-text)}
-.careers .section-sub{color:rgba(255,255,255,0.6)}
-.jobs-list{display:flex;flex-direction:column;gap:14px;margin-top:8px}
-.job-item{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:22px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:all .25s;cursor:pointer}
-.job-item:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.2)}
-.job-title{font-size:15px;font-weight:600;color:var(--inv-text);margin-bottom:4px}
-.job-meta{font-size:12px;color:rgba(255,255,255,0.45)}
-.job-dept{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;background:rgba(242,184,0,0.15);color:var(--yellow);padding:4px 10px;border-radius:4px;white-space:nowrap}
-.apply-arrow{color:rgba(255,255,255,0.3);font-size:18px;transition:all .25s}
-.job-item:hover .apply-arrow{color:var(--yellow);transform:translateX(4px)}
+.careers-bg{background:var(--inv-bg);position:relative;overflow:hidden;padding:96px 0}
+.careers-bg::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(192,24,24,.12) 0%,transparent 70%)}
+.careers-inner{max-width:1320px;margin:0 auto;padding:0 36px;position:relative;z-index:1}
+.careers-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.careers-bg .section-label{color:var(--yellow)}
+.careers-bg .section-label::before{background:var(--yellow)}
+.careers-bg h2{color:var(--inv-text)}
+.careers-bg .lead{color:rgba(255,255,255,.55);margin-bottom:32px}
+.jobs-list{display:flex;flex-direction:column;gap:12px}
+.job-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;transition:all .25s;cursor:pointer}
+.job-card:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2);transform:translateX(4px)}
+.job-title{font-family:'Sen',sans-serif;font-size:15px;font-weight:700;color:var(--inv-text);margin-bottom:4px}
+.job-meta{font-size:12px;color:rgba(255,255,255,.4)}
+.job-dept-tag{font-family:'Sen',sans-serif;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:rgba(242,184,0,.15);color:var(--yellow);padding:4px 10px;border-radius:5px;white-space:nowrap}
+.job-arrow{font-size:18px;color:rgba(255,255,255,.25);transition:all .25s}
+.job-card:hover .job-arrow{color:var(--yellow);transform:translateX(4px)}
+/* apply modal */
+.apply-modal-body{padding:36px}
+.apply-modal-body h3{font-family:'Sen',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px}
+.apply-modal-body .role-label{font-size:13px;color:var(--muted);margin-bottom:28px}
+.form-group{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+.form-group label{font-family:'Sen',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}
+.form-group input,.form-group select,.form-group textarea{background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;transition:border-color .2s;width:100%}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--red)}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-error{font-size:12px;color:var(--red);display:none}
+.form-group.error input,.form-group.error select,.form-group.error textarea{border-color:var(--red)}
+.form-group.error .form-error{display:block}
 
 /* ── CONTACT ── */
-.contact{background:var(--bg)}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:56px;align-items:start}
-.contact-info h3{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;margin-bottom:20px}
-.contact-info p{font-size:15px;line-height:1.8;color:var(--text2);margin-bottom:32px}
-.contact-details{display:flex;flex-direction:column;gap:20px}
+.contact-details{display:flex;flex-direction:column;gap:20px;margin-top:28px}
 .contact-item{display:flex;align-items:flex-start;gap:16px}
-.contact-item-icon{width:44px;height:44px;border-radius:10px;background:rgba(192,24,24,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.contact-item-text strong{display:block;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
-.contact-item-text span{font-size:15px;font-weight:500}
-.contact-form{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px;box-shadow:var(--shadow)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
-.form-group label{font-size:12px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text2)}
-.form-group input,.form-group select,.form-group textarea{background:var(--bg2);border:1.5px solid var(--border);border-radius:10px;padding:13px 18px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);outline:none;transition:border-color .2s;width:100%}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--red)}
-.form-group textarea{resize:vertical;min-height:120px}
+.c-icon{width:46px;height:46px;border-radius:12px;background:var(--red-lt);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.c-text strong{display:block;font-family:'Sen',sans-serif;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.c-text span{font-size:15px;font-weight:500}
+.contact-form-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:44px;box-shadow:var(--sh)}
+.contact-form-box h3{font-family:'Sen',sans-serif;font-size:22px;font-weight:800;margin-bottom:24px}
 
 /* ── CTA BAND ── */
-.cta-band{background:linear-gradient(135deg,var(--red) 0%,#8A0D0D 60%,#5A0000 100%);padding:72px 0;text-align:center}
-.cta-band h2{font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,52px);font-weight:900;color:#fff;margin-bottom:16px}
-.cta-band p{font-size:18px;color:rgba(255,255,255,0.72);margin-bottom:40px;max-width:560px;margin-left:auto;margin-right:auto}
-.cta-actions{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.cta-band{background:linear-gradient(135deg,var(--red) 0%,#7A0808 100%);padding:72px 0;text-align:center}
+.cta-band h2{color:#fff;margin-bottom:14px}
+.cta-band p{font-size:18px;color:rgba(255,255,255,.7);max-width:520px;margin:0 auto 40px;line-height:1.7}
+.cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 
 /* ── FOOTER ── */
-footer{background:var(--black);color:rgba(255,255,255,0.7);padding:72px 0 0}
-.footer-inner{max-width:1320px;margin:0 auto;padding:0 40px}
-.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:56px;border-bottom:1px solid rgba(255,255,255,0.08)}
-.footer-brand{}
-.footer-logo{margin-bottom:20px}
-.footer-logo img{height:46px;width:auto;filter:brightness(1.2)}
-.footer-desc{font-size:14px;line-height:1.8;color:rgba(255,255,255,0.5);max-width:280px;margin-bottom:28px}
-.footer-socials{display:flex;gap:10px}
-.soc-btn{width:38px;height:38px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-size:14px;cursor:pointer;transition:all .2s}
-.soc-btn:hover{background:var(--red);border-color:var(--red);color:#fff}
-.footer-col h4{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#fff;margin-bottom:20px}
-.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:12px}
-.footer-col ul a{font-size:14px;color:rgba(255,255,255,0.5);text-decoration:none;transition:color .2s}
-.footer-col ul a:hover{color:#fff}
-.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding:24px 0;flex-wrap:wrap;gap:12px}
-.footer-copy{font-size:13px;color:rgba(255,255,255,0.35)}
+footer{background:#0A0806;color:rgba(255,255,255,.65);padding:72px 0 0}
+.footer-inner{max-width:1320px;margin:0 auto;padding:0 36px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;padding-bottom:56px;border-bottom:1px solid rgba(255,255,255,.07)}
+.footer-logo img{height:44px;width:auto;margin-bottom:18px;display:block}
+.footer-desc{font-size:14px;line-height:1.8;color:rgba(255,255,255,.45);max-width:280px;margin-bottom:28px}
+.footer-socials{display:flex;gap:8px}
+.soc-btn{width:38px;height:38px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:transparent;color:rgba(255,255,255,.55);font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.soc-btn:hover{background:var(--red);border-color:var(--red);color:#fff;transform:translateY(-2px)}
+.footer-col h4{font-family:'Sen',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;margin-bottom:18px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col a{font-size:14px;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s;display:inline-flex;align-items:center;gap:6px}
+.footer-col a:hover{color:#fff}
+.footer-col a::before{content:'›';opacity:0;transition:opacity .2s}
+.footer-col a:hover::before{opacity:.6}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding:24px 0;gap:12px;flex-wrap:wrap}
+.footer-copy{font-size:13px;color:rgba(255,255,255,.3)}
 .footer-badges{display:flex;gap:8px;flex-wrap:wrap}
-.f-badge{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);font-size:11px;font-weight:600;padding:5px 12px;border-radius:4px;letter-spacing:0.05em}
+.f-badge{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);font-family:'Sen',sans-serif;font-size:11px;font-weight:700;padding:5px 12px;border-radius:5px;letter-spacing:.05em}
 
-/* MOBILE NAV */
-.menu-btn{display:none;background:none;border:none;cursor:pointer;padding:8px;color:var(--text);font-size:22px}
+/* ── TOAST ── */
+.toast-wrap{position:fixed;bottom:28px;right:28px;z-index:999;display:flex;flex-direction:column;gap:10px;pointer-events:none}
+.toast{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:var(--sh-lg);font-size:14px;min-width:300px;pointer-events:all;transform:translateX(120%);transition:transform .35s var(--ease);border-left:4px solid var(--red)}
+.toast.show{transform:translateX(0)}
+.toast.success{border-left-color:#22C55E}
+.toast.info{border-left-color:var(--yellow)}
+.toast-icon{font-size:20px;flex-shrink:0}
+.toast-text strong{font-family:'Sen',sans-serif;font-size:13px;font-weight:700;display:block;margin-bottom:2px}
+.toast-text span{font-size:13px;color:var(--muted)}
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s var(--ease),transform .65s var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-l{opacity:0;transform:translateX(-28px);transition:opacity .65s var(--ease),transform .65s var(--ease)}
+.reveal-l.visible{opacity:1;transform:translateX(0)}
+.reveal-r{opacity:0;transform:translateX(28px);transition:opacity .65s var(--ease),transform .65s var(--ease)}
+.reveal-r.visible{opacity:1;transform:translateX(0)}
+.delay-1{transition-delay:.1s}.delay-2{transition-delay:.2s}.delay-3{transition-delay:.3s}.delay-4{transition-delay:.4s}
 
 /* ── RESPONSIVE ── */
-@media(max-width:1100px){
-  .leadership-grid{grid-template-columns:1fr 1fr}
-  .leader-card.featured{grid-column:span 2}
+@media(max-width:1080px){
+  .leaders-grid{grid-template-columns:1fr 1fr}
+  .leader-featured{grid-column:span 2}
   .news-grid{grid-template-columns:1fr 1fr}
   .news-card.featured{grid-column:span 2}
   .sust-grid{grid-template-columns:1fr}
   .sust-right{grid-template-columns:repeat(4,1fr)}
-  .sust-metric{border-bottom:none;border-right:1px solid var(--border)}
-  .sust-metric:last-child{border-right:none}
+  .sust-metric:nth-child(3),.sust-metric:nth-child(4){border-bottom:none}
+  .faq-grid{grid-template-columns:1fr}
 }
-@media(max-width:900px){
-  .about-grid,.ops-panel.active,.people-grid,.careers-grid,.contact-grid,.leadership-intro{grid-template-columns:1fr}
-  .mandate-grid,.partners-logos,.local-grid{grid-template-columns:1fr}
-  .leader-card.featured{grid-template-columns:1fr;display:block}
-  .leader-card.featured .leader-img{height:280px}
+@media(max-width:860px){
+  .about-grid,.ops-panel.active,.people-split,.contact-grid,.careers-grid,.leadership-header,.partners-grid,.lc-grid,.mandate-grid{grid-template-columns:1fr}
+  .leader-featured{display:block;grid-column:span 2}
+  .leader-featured .leader-img{height:280px}
   .sust-right{grid-template-columns:1fr 1fr}
   .sust-metric:nth-child(odd){border-right:1px solid var(--border)}
   .sust-metric:nth-child(even){border-right:none}
-  .sust-metric:nth-child(3),.sust-metric:nth-child(4){border-bottom:1px solid var(--border)}
-  .sust-metric:last-child{border-bottom:none}
-  .about-badge{bottom:-16px;right:-8px}
-  .hero-stats-inner{grid-template-columns:1fr 1fr}
-  .hero-stat:nth-child(2){border-right:none}
-  .hero-stat:nth-child(3){border-top:1px solid rgba(255,255,255,0.08)}
+  .stats-bar-inner{grid-template-columns:1fr 1fr}
+  .stat-item:nth-child(2){border-right:none}
+  .stat-item:nth-child(3){border-top:1px solid rgba(255,255,255,.07)}
+  .modal-hero{grid-template-columns:1fr}
+  .modal-photo{width:100%;height:220px;border-radius:20px 20px 0 0}
+  .modal-header{border-radius:0}
 }
 @media(max-width:640px){
-  .nav-links,.nav-cta .btn-ghost{display:none}
+  .nav-links,.nav-right .btn-secondary{display:none}
   .menu-btn{display:block}
-  .hero-h1{font-size:40px}
-  .hero-desc{font-size:16px}
-  .leadership-grid{grid-template-columns:1fr}
+  .hero h1{font-size:42px}
+  .leaders-grid{grid-template-columns:1fr}
+  .leader-featured{grid-column:span 1}
   .news-grid{grid-template-columns:1fr}
   .news-card.featured{grid-column:span 1}
-  .hero-stats-inner{grid-template-columns:1fr 1fr}
-  .about-pillars{grid-template-columns:1fr}
-  .ops-tabs{flex-direction:column}
-  .footer-top{grid-template-columns:1fr 1fr}
-  .form-row{grid-template-columns:1fr}
+  .about-img-badge{right:-8px}
+  .ops-tabs-wrap{gap:3px}
   section{padding:64px 0}
-  .container{padding:0 20px}
-  .nav-inner,.hero-content,.mandate-inner,.careers-inner,.footer-inner{padding-left:20px;padding-right:20px}
-  .people-content{padding:48px 28px}
-  .sust-left{padding:40px 28px}
-  .contact-form{padding:28px}
+  .wrap{padding:0 20px}
+  .careers-inner{padding:0 20px}
+  .footer-inner{padding:0 20px}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .stats-bar-inner{grid-template-columns:1fr 1fr;padding:0 20px}
+  .form-row{grid-template-columns:1fr}
+  .modal-facts{grid-template-columns:1fr}
+  .contact-form-box{padding:28px 22px}
 }
-
-/* ANIMATIONS */
-.fade-in{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
-.fade-in.visible{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
 
-<!-- ── NAVIGATION ── -->
-<nav>
+<!-- PROGRESS BAR -->
+<div id="progress-bar"></div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- MOBILE DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <button class="drawer-close" onclick="closeDrawer()">✕</button>
+  <a href="#about" onclick="closeDrawer()">About UNOC</a>
+  <a href="#operations" onclick="closeDrawer()">Operations</a>
+  <a href="#leadership" onclick="closeDrawer()">Leadership</a>
+  <a href="#partners" onclick="closeDrawer()">Partners</a>
+  <a href="#people" onclick="closeDrawer()">Our People</a>
+  <a href="#sustainability" onclick="closeDrawer()">Sustainability</a>
+  <a href="#news" onclick="closeDrawer()">News</a>
+  <a href="#careers" onclick="closeDrawer()">Careers</a>
+  <a href="#contact" onclick="closeDrawer()">Contact</a>
+  <div style="margin-top:12px">
+    <a class="btn btn-primary btn-md" style="display:flex" href="#careers" onclick="closeDrawer()">Join UNOC →</a>
+  </div>
+</div>
+
+<!-- LEADER MODAL -->
+<div class="modal-overlay" id="leaderModal" onclick="handleModalClick(event)">
+  <div class="modal" id="leaderModalContent">
+    <button class="modal-close" onclick="closeModal('leaderModal')">✕</button>
+    <div class="modal-hero">
+      <img class="modal-photo" id="modalPhoto" src="" alt="">
+      <div class="modal-header">
+        <div id="modalDept" class="modal-dept-tag"></div>
+        <div style="margin-top:auto;padding-top:16px">
+          <div class="modal-name" id="modalName"></div>
+          <div class="modal-title" id="modalTitle"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <p class="modal-bio" id="modalBio"></p>
+      <div class="modal-facts" id="modalFacts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- APPLY MODAL -->
+<div class="modal-overlay" id="applyModal" onclick="handleModalClick(event)">
+  <div class="modal" style="max-width:580px">
+    <button class="modal-close" onclick="closeModal('applyModal')">✕</button>
+    <div class="apply-modal-body">
+      <h3>Apply for Position</h3>
+      <p class="role-label" id="applyRoleLabel">Loading…</p>
+      <div class="form-row">
+        <div class="form-group" id="fg-fname">
+          <label>First Name *</label>
+          <input type="text" id="apply-fname" placeholder="Jane">
+          <span class="form-error">Please enter your first name</span>
+        </div>
+        <div class="form-group" id="fg-lname">
+          <label>Last Name *</label>
+          <input type="text" id="apply-lname" placeholder="Doe">
+          <span class="form-error">Please enter your last name</span>
+        </div>
+      </div>
+      <div class="form-group" id="fg-email">
+        <label>Email Address *</label>
+        <input type="email" id="apply-email" placeholder="you@example.com">
+        <span class="form-error">Please enter a valid email</span>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="apply-phone" placeholder="+256 700 000 000">
+      </div>
+      <div class="form-group" id="fg-cv">
+        <label>Upload CV / Résumé *</label>
+        <input type="file" id="apply-cv" accept=".pdf,.doc,.docx">
+        <span class="form-error">Please attach your CV</span>
+      </div>
+      <div class="form-group">
+        <label>Cover Note</label>
+        <textarea id="apply-cover" placeholder="Briefly tell us why you're a great fit…"></textarea>
+      </div>
+      <button class="btn btn-primary btn-lg" style="width:100%;margin-top:8px" onclick="submitApply()">Submit Application →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── NAV ─────────────── -->
+<nav id="mainNav">
   <div class="nav-inner">
     <a class="nav-logo" href="#">
-      <img src="unoc_logo.png" alt="UNOC – Uganda National Oil Company">
+      <img src="unoc_logo.png" alt="UNOC">
     </a>
-    <ul class="nav-links">
-      <li class="active"><a href="#about">About</a></li>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
       <li><a href="#operations">Operations</a></li>
       <li><a href="#leadership">Leadership</a></li>
       <li><a href="#partners">Partners</a></li>
-      <li><a href="#people">Our People</a></li>
+      <li><a href="#people">People</a></li>
       <li><a href="#news">News</a></li>
       <li><a href="#careers">Careers</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <div class="nav-cta">
-      <button class="btn btn-ghost" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get in Touch</button>
-      <button class="btn btn-primary" onclick="document.getElementById('careers').scrollIntoView({behavior:'smooth'})">Join Us</button>
-      <button id="themeBtn" title="Toggle theme">🌙</button>
+    <div class="nav-right">
+      <button class="btn btn-secondary btn-sm" onclick="scrollTo('#contact')">Get in Touch</button>
+      <button class="btn btn-primary btn-sm" onclick="scrollTo('#careers')">Join Us</button>
+      <button id="themeBtn" title="Toggle dark mode">🌙</button>
+      <button class="menu-btn" id="menuBtn" onclick="openDrawer()">☰</button>
     </div>
-    <button class="menu-btn" id="menuBtn">☰</button>
   </div>
 </nav>
 
-<!-- ── HERO ── -->
+<!-- ─────────────── HERO ─────────────── -->
 <section class="hero" id="home">
   <div class="hero-bg"></div>
   <div class="hero-img"></div>
-  <div class="hero-gradient"></div>
-  <div class="hero-accent"></div>
+  <div class="hero-grad"></div>
+  <div class="hero-grad2"></div>
+  <div class="hero-glow"></div>
   <div class="hero-content">
-    <div class="hero-tag"><span class="dot"></span> Established 2015 · Kampala, Uganda</div>
-    <h1 class="hero-h1">Uganda's Oil &amp; Gas<br><em>Future Starts Here</em></h1>
-    <p class="hero-desc">The Uganda National Oil Company is the government's commercial instrument in the petroleum sector — driving exploration, development, and production for the benefit of all Ugandans.</p>
-    <div class="hero-actions">
-      <a href="#operations" class="btn btn-gold">Explore Operations →</a>
-      <a href="#about" class="btn btn-outline-white">Our Story</a>
+    <div class="hero-tag"><span class="live"></span> Kampala, Uganda · Est. 2015</div>
+    <h1>Uganda's National<br><em>Oil Company</em></h1>
+    <p class="hero-sub">The government's commercial instrument for participating in the petroleum sector — developing Uganda's oil and gas resources for the long-term benefit of every Ugandan.</p>
+    <div class="hero-btns">
+      <button class="btn btn-yellow btn-lg" onclick="scrollTo('#operations')">Explore Our Projects →</button>
+      <button class="btn btn-ghost-dark btn-lg" onclick="scrollTo('#about')">Our Story</button>
     </div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span>Scroll</span>
-  </div>
-  <div class="hero-stats-bar">
-    <div class="hero-stats-inner">
-      <div class="hero-stat">
-        <div class="hero-stat-num">6.5<span>B</span></div>
-        <div class="hero-stat-label">Barrels Discovered</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">1.4<span>B</span></div>
-        <div class="hero-stat-label">Recoverable Reserves</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">216<span>km</span></div>
-        <div class="hero-stat-label">EACOP Uganda Stretch</div>
-      </div>
-      <div class="hero-stat">
-        <div class="hero-stat-num">10<span>+</span></div>
-        <div class="hero-stat-label">Years of Excellence</div>
-      </div>
+    <div class="hero-scroll-hint">
+      <div class="scroll-line"></div>
+      <span>Scroll to explore</span>
     </div>
   </div>
 </section>
 
-<!-- ── ABOUT ── -->
-<section class="about" id="about">
-  <div class="container">
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-item">
+      <div class="stat-num"><span class="count" data-target="6.5" data-decimal="1">0</span><sup>B</sup></div>
+      <div class="stat-label">Barrels Discovered</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span class="count" data-target="1.4" data-decimal="1">0</span><sup>B</sup></div>
+      <div class="stat-label">Recoverable Reserves</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span class="count" data-target="216" data-decimal="0">0</span><sup>km</sup></div>
+      <div class="stat-label">EACOP Uganda Stretch</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span class="count" data-target="10" data-decimal="0">0</span><sup>+</sup></div>
+      <div class="stat-label">Years of Excellence</div>
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-label">Latest</div>
+  <div class="ticker-track-wrap">
+    <div class="ticker-track">
+      <span class="ticker-item">Tilenga Project CPF construction accelerates towards First Oil</span>
+      <span class="ticker-item">EACOP pipeline reaches 40% construction milestone</span>
+      <span class="ticker-item">UNOC celebrates 10 years of managing Uganda's petroleum interests</span>
+      <span class="ticker-item">2025 Graduate Internship Programme applications now open</span>
+      <span class="ticker-item">UNOC awarded ISO 9001:2015 recertification</span>
+      <span class="ticker-item">Kingfisher Area Development drilling programme progresses on schedule</span>
+      <span class="ticker-item">Uganda Refinery Holding Company advances pre-FEED studies</span>
+      <span class="ticker-item">UNOC publishes 2024 Annual Report – record community investment</span>
+      <!-- duplicate for seamless loop -->
+      <span class="ticker-item">Tilenga Project CPF construction accelerates towards First Oil</span>
+      <span class="ticker-item">EACOP pipeline reaches 40% construction milestone</span>
+      <span class="ticker-item">UNOC celebrates 10 years of managing Uganda's petroleum interests</span>
+      <span class="ticker-item">2025 Graduate Internship Programme applications now open</span>
+      <span class="ticker-item">UNOC awarded ISO 9001:2015 recertification</span>
+      <span class="ticker-item">Kingfisher Area Development drilling programme progresses on schedule</span>
+      <span class="ticker-item">Uganda Refinery Holding Company advances pre-FEED studies</span>
+      <span class="ticker-item">UNOC publishes 2024 Annual Report – record community investment</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── ABOUT ─────────────── -->
+<section id="about">
+  <div class="wrap">
     <div class="about-grid">
-      <div class="about-img-wrap fade-in">
-        <img class="about-main-img" src="about-us.jpg" alt="UNOC Team">
-        <div class="about-badge">
-          <div class="about-badge-num">10</div>
-          <div class="about-badge-label">Years of Service</div>
+      <div class="about-img-stack reveal-l">
+        <div class="about-img-accent"></div>
+        <img class="about-img-main" src="about-us.jpg" alt="UNOC Team at Work">
+        <div class="about-img-badge">
+          <div class="badge-num">10</div>
+          <div class="badge-sub">Years Serving<br>Uganda</div>
         </div>
       </div>
-      <div class="fade-in">
-        <div class="section-eyebrow">Who We Are</div>
-        <h2 class="section-title">Uganda's Strategic<br>Petroleum Partner</h2>
+      <div class="reveal-r">
+        <div class="section-label">Who We Are</div>
+        <h2>Uganda's Strategic<br>Petroleum Partner</h2>
         <div class="divider"></div>
-        <p class="about-body">The Uganda National Oil Company Limited (UNOC) was incorporated in 2015 under the Petroleum (Exploration, Development and Production) Act, 2013 and the Petroleum (Refining, Conversion, Transmission and Midstream Storage) Act, 2013.</p>
-        <p class="about-body">UNOC holds and manages the government's commercial interests in the petroleum sector, participates in joint ventures with international oil companies, and develops the country's petroleum value chain for long-term economic transformation.</p>
-        <div class="about-pillars">
+        <p class="lead" style="margin-bottom:20px">The Uganda National Oil Company Limited (UNOC) was incorporated in 2015 under the Petroleum (Exploration, Development and Production) Act, 2013.</p>
+        <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:32px">UNOC holds and manages the Government of Uganda's commercial interests in the petroleum sector — participating in joint ventures with international oil companies, developing midstream infrastructure, and building national petroleum capacity for long-term economic transformation.</p>
+        <div class="pillars">
           <div class="pillar">
             <h4>🎯 Mission</h4>
-            <p>To profitably develop Uganda's petroleum resources to generate maximum long-term value for Uganda.</p>
+            <p>Profitably developing Uganda's petroleum resources to generate maximum long-term value for all Ugandans.</p>
           </div>
           <div class="pillar">
             <h4>🌍 Vision</h4>
-            <p>To be a significant contributor to Uganda's socio-economic development through petroleum resources.</p>
+            <p>Becoming a significant contributor to Uganda's socio-economic transformation through petroleum.</p>
           </div>
           <div class="pillar">
             <h4>⚖️ Integrity</h4>
-            <p>Operating with transparency, accountability and the highest ethical standards in all activities.</p>
+            <p>Operating with transparency, accountability and the highest ethical standards in all we do.</p>
           </div>
           <div class="pillar">
             <h4>🏆 Excellence</h4>
@@ -479,326 +674,341 @@ footer{background:var(--black);color:rgba(255,255,255,0.7);padding:72px 0 0}
   </div>
 </section>
 
-<!-- ── MANDATE ── -->
+<!-- ─────────────── MANDATE ─────────────── -->
 <div class="mandate">
-  <div class="mandate-inner">
-    <div class="section-eyebrow" style="color:var(--yellow)"><span style="display:inline-block;width:28px;height:2px;background:var(--yellow);vertical-align:middle;margin-right:10px"></span>Our Mandate</div>
-    <h2 class="section-title" style="color:#fff;max-width:560px">What UNOC Does for Uganda</h2>
+  <div class="wrap">
+    <div class="section-label" style="color:var(--yellow)"><span style="width:26px;height:2px;background:var(--yellow);display:inline-block;border-radius:1px"></span>Our Mandate</div>
+    <h2 style="color:#fff;max-width:560px">What UNOC Does<br>for Uganda</h2>
     <div class="mandate-grid">
-      <div class="mandate-card fade-in">
-        <div class="mandate-icon">⛏️</div>
+      <div class="m-card reveal delay-1">
+        <div class="m-icon">⛏️</div>
         <h3>Upstream Participation</h3>
-        <p>UNOC holds the government's equity interest in production sharing agreements in the Albertine Graben, partnering with TotalEnergies, CNOOC, and other operators across Tilenga, Kingfisher and other licensed areas.</p>
+        <p>UNOC holds the Government's equity in Production Sharing Agreements in the Albertine Graben — partnering with TotalEnergies and CNOOC across Tilenga, Kingfisher and other licensed blocks.</p>
       </div>
-      <div class="mandate-card fade-in">
-        <div class="mandate-icon">🔧</div>
+      <div class="m-card reveal delay-2">
+        <div class="m-icon">🔧</div>
         <h3>Refining &amp; Midstream</h3>
-        <p>Through its subsidiary Uganda Refinery Holding Company Limited (URHC), UNOC is at the forefront of developing Uganda's first oil refinery at Kabaale, and holds interest in the East African Crude Oil Pipeline (EACOP).</p>
+        <p>Through URHC, UNOC is developing Uganda's first oil refinery at Kabaale and holds interest in the East African Crude Oil Pipeline (EACOP) — the world's longest electrically heated crude oil pipeline.</p>
       </div>
-      <div class="mandate-card fade-in">
-        <div class="mandate-icon">⚡</div>
-        <h3>National Capacity Building</h3>
-        <p>UNOC develops Ugandan petroleum expertise through targeted internship programmes, secondments to international oil companies, and supporting the growth of local content in the oil and gas sector.</p>
+      <div class="m-card reveal delay-3">
+        <div class="m-icon">⚡</div>
+        <h3>Capacity Building</h3>
+        <p>Developing the next generation of Ugandan petroleum professionals through internships, international secondments, sponsored postgraduate training and structured career programmes.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ── OPERATIONS ── -->
-<section class="operations" id="operations">
-  <div class="container">
-    <div class="section-eyebrow">Projects &amp; Operations</div>
-    <h2 class="section-title">Where We Work</h2>
+<!-- ─────────────── OPERATIONS ─────────────── -->
+<section class="ops-bg" id="operations">
+  <div class="wrap">
+    <div class="section-label">Projects &amp; Operations</div>
+    <h2>Where We Work</h2>
     <div class="divider"></div>
-    <p class="section-sub">UNOC has equity participation in three major upstream projects in the Albertine Graben, plus critical midstream infrastructure.</p>
-    <div class="ops-tabs">
-      <button class="ops-tab active" data-tab="tilenga">Tilenga Project</button>
-      <button class="ops-tab" data-tab="kingfisher">Kingfisher Area</button>
-      <button class="ops-tab" data-tab="eacop">EACOP Pipeline</button>
-      <button class="ops-tab" data-tab="refinery">Oil Refinery</button>
+    <p class="lead">UNOC holds equity in four major projects spanning Uganda's petroleum value chain — from upstream fields to critical export infrastructure.</p>
+    <div class="ops-tabs-wrap" role="tablist">
+      <button class="ops-tab active" role="tab" data-tab="tilenga" onclick="switchTab(this,'tilenga')">⛏ Tilenga Project</button>
+      <button class="ops-tab" role="tab" data-tab="kingfisher" onclick="switchTab(this,'kingfisher')">🛢 Kingfisher Area</button>
+      <button class="ops-tab" role="tab" data-tab="eacop" onclick="switchTab(this,'eacop')">🚰 EACOP Pipeline</button>
+      <button class="ops-tab" role="tab" data-tab="refinery" onclick="switchTab(this,'refinery')">🏭 Oil Refinery</button>
     </div>
     <div class="ops-panels">
-      <!-- Tilenga -->
       <div class="ops-panel active" id="tab-tilenga">
-        <img class="ops-img fade-in" src="1772798855169.jpeg" alt="Tilenga Project Construction">
-        <div class="fade-in">
-          <div class="ops-panel-tag">Upstream · Operated by TotalEnergies EP Uganda</div>
-          <h3 class="section-title" style="font-size:38px">Tilenga Project</h3>
-          <p class="ops-panel-desc">Located in the Albertine Graben, the Tilenga Project spans blocks 1, 1A, 2 and 3A. It includes development of the Jobi-Rii, Gunya, Ngiri and associated fields, as well as critical infrastructure inside Murchison Falls National Park.</p>
+        <img class="ops-img reveal-l" src="1772798855169.jpeg" alt="Tilenga CPF under construction">
+        <div class="reveal-r">
+          <div class="ops-tag">Upstream · Operated by TotalEnergies EP Uganda</div>
+          <h3>Tilenga Project</h3>
+          <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:8px">Located in Blocks 1, 1A, 2 &amp; 3A of the Albertine Graben, Tilenga is one of the largest upstream investments in sub-Saharan Africa. The Central Processing Facility (CPF) is under construction at Kasenyi.</p>
           <div class="ops-specs">
             <div class="spec"><div class="spec-val">190,000</div><div class="spec-key">Barrels/day peak production</div></div>
             <div class="spec"><div class="spec-val">426</div><div class="spec-key">Production wells planned</div></div>
-            <div class="spec"><div class="spec-val">15%</div><div class="spec-key">UNOC Equity Interest</div></div>
-            <div class="spec"><div class="spec-val">~$10B</div><div class="spec-key">Capital Investment</div></div>
+            <div class="spec"><div class="spec-val">15%</div><div class="spec-key">UNOC equity interest</div></div>
+            <div class="spec"><div class="spec-val">~$10B</div><div class="spec-key">Total capital investment</div></div>
           </div>
-          <div class="ops-badge"><span class="status-dot"></span> Under Development</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <span class="status-badge"><span class="status-dot"></span>Under Development</span>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('📁','Tilenga Project','Fact sheet download initiated.','info')">Download Fact Sheet</button>
+          </div>
         </div>
       </div>
-      <!-- Kingfisher -->
       <div class="ops-panel" id="tab-kingfisher">
-        <img class="ops-img fade-in" src="1772798855169.jpeg" alt="Kingfisher Area">
-        <div class="fade-in">
-          <div class="ops-panel-tag">Upstream · Operated by CNOOC Uganda Limited</div>
-          <h3 class="section-title" style="font-size:38px">Kingfisher Area Development</h3>
-          <p class="ops-panel-desc">The Kingfisher Area Development (KAD) is located in Block 2, south of the Tilenga Project. Operated by CNOOC Uganda Limited, it covers the Kingfisher and Kakindo fields in the Albertine Graben basin.</p>
+        <img class="ops-img reveal-l" src="1772798855169.jpeg" alt="Kingfisher Area">
+        <div class="reveal-r">
+          <div class="ops-tag">Upstream · Operated by CNOOC Uganda Limited</div>
+          <h3>Kingfisher Area<br>Development</h3>
+          <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:8px">KAD covers the Kingfisher and Kakindo fields in Block 2 of the Albertine Graben. Operated by CNOOC Uganda Limited, it runs parallel to the Tilenga Project with a shared commitment to First Oil.</p>
           <div class="ops-specs">
             <div class="spec"><div class="spec-val">40,000</div><div class="spec-key">Barrels/day peak production</div></div>
             <div class="spec"><div class="spec-val">121</div><div class="spec-key">Production wells planned</div></div>
-            <div class="spec"><div class="spec-val">15%</div><div class="spec-key">UNOC Equity Interest</div></div>
-            <div class="spec"><div class="spec-val">~$4B</div><div class="spec-key">Capital Investment</div></div>
+            <div class="spec"><div class="spec-val">15%</div><div class="spec-key">UNOC equity interest</div></div>
+            <div class="spec"><div class="spec-val">~$4B</div><div class="spec-key">Total capital investment</div></div>
           </div>
-          <div class="ops-badge"><span class="status-dot"></span> Under Development</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <span class="status-badge"><span class="status-dot"></span>Under Development</span>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('📁','Kingfisher Area','Fact sheet download initiated.','info')">Download Fact Sheet</button>
+          </div>
         </div>
       </div>
-      <!-- EACOP -->
       <div class="ops-panel" id="tab-eacop">
-        <img class="ops-img fade-in" src="1772798855169.jpeg" alt="EACOP Pipeline">
-        <div class="fade-in">
-          <div class="ops-panel-tag">Midstream · 1,443km Heated Crude Oil Pipeline</div>
-          <h3 class="section-title" style="font-size:38px">East African Crude Oil Pipeline</h3>
-          <p class="ops-panel-desc">The world's longest electrically heated crude oil pipeline runs 1,443 km from Hoima, Uganda to Tanga Port, Tanzania. UNOC through its subsidiary UNOC Pipeline Company (UPC) holds Uganda's equity stake in this transformative infrastructure.</p>
+        <img class="ops-img reveal-l" src="1772798855169.jpeg" alt="EACOP Pipeline">
+        <div class="reveal-r">
+          <div class="ops-tag">Midstream · 1,443km Electrically Heated Pipeline</div>
+          <h3>East African Crude<br>Oil Pipeline</h3>
+          <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:8px">The world's longest electrically heated crude oil pipeline, running 1,443 km from Hoima, Uganda to Tanga Port, Tanzania. UNOC holds Uganda's equity through its subsidiary UNOC Pipeline Company (UPC).</p>
           <div class="ops-specs">
             <div class="spec"><div class="spec-val">1,443km</div><div class="spec-key">Total pipeline length</div></div>
             <div class="spec"><div class="spec-val">216km</div><div class="spec-key">Uganda section</div></div>
-            <div class="spec"><div class="spec-val">15%</div><div class="spec-key">UNOC Equity Interest</div></div>
+            <div class="spec"><div class="spec-val">15%</div><div class="spec-key">UNOC equity interest</div></div>
             <div class="spec"><div class="spec-val">216,000</div><div class="spec-key">bpd capacity</div></div>
           </div>
-          <div class="ops-badge"><span class="status-dot"></span> Under Construction</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <span class="status-badge"><span class="status-dot"></span>Under Construction</span>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('📁','EACOP','Fact sheet download initiated.','info')">Download Fact Sheet</button>
+          </div>
         </div>
       </div>
-      <!-- Refinery -->
       <div class="ops-panel" id="tab-refinery">
-        <img class="ops-img fade-in" src="1772798855169.jpeg" alt="Uganda Oil Refinery">
-        <div class="fade-in">
-          <div class="ops-panel-tag">Downstream · Uganda Refinery Holding Company (URHC)</div>
-          <h3 class="section-title" style="font-size:38px">Uganda Oil Refinery</h3>
-          <p class="ops-panel-desc">Planned at Kabaale Industrial Park in Hoima District, Uganda's first crude oil refinery will process domestic oil and supply refined petroleum products to Uganda and the wider East African market — reducing the country's import dependence.</p>
+        <img class="ops-img reveal-l" src="1772798855169.jpeg" alt="Uganda Oil Refinery">
+        <div class="reveal-r">
+          <div class="ops-tag">Downstream · Uganda Refinery Holding Company (URHC)</div>
+          <h3>Uganda Oil<br>Refinery</h3>
+          <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:8px">Planned at Kabaale Industrial Park in Hoima District, Uganda's first crude oil refinery will process domestic oil and supply refined products to Uganda and the broader East African Community market.</p>
           <div class="ops-specs">
             <div class="spec"><div class="spec-val">60,000</div><div class="spec-key">bpd processing capacity</div></div>
             <div class="spec"><div class="spec-val">Kabaale</div><div class="spec-key">Location, Hoima District</div></div>
-            <div class="spec"><div class="spec-val">100%</div><div class="spec-key">URHC Government Held</div></div>
+            <div class="spec"><div class="spec-val">100%</div><div class="spec-key">Government held via URHC</div></div>
             <div class="spec"><div class="spec-val">EAC</div><div class="spec-key">Target market</div></div>
           </div>
-          <div class="ops-badge"><span style="width:7px;height:7px;border-radius:50%;background:#FBBF24;animation:blink 1.5s infinite;display:inline-block"></span> Pre-FEED Stage</div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <span class="status-badge"><span class="status-dot amber"></span>Pre-FEED Stage</span>
+            <button class="btn btn-secondary btn-sm" onclick="showToast('📁','Refinery','Fact sheet download initiated.','info')">Download Fact Sheet</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── LEADERSHIP ── -->
-<section class="leadership" id="leadership">
-  <div class="container">
-    <div class="leadership-intro">
-      <div>
-        <div class="section-eyebrow">Executive Team</div>
-        <h2 class="section-title">Guided by Experienced<br>Leadership</h2>
-        <div class="divider"></div>
-      </div>
-      <p class="section-sub">UNOC's leadership team brings deep expertise in petroleum law, engineering, finance and operations — combining international experience with an unwavering commitment to Uganda's development.</p>
-    </div>
-    <div class="leadership-grid">
-      <!-- Featured CEO -->
-      <div class="leader-card featured fade-in">
-        <img class="leader-img" src="Mathias-Katamba.jpg" alt="Mathias Katamba">
-        <div class="leader-info">
-          <div class="leader-dept">Chief Executive</div>
-          <div class="leader-name">Mathias Katamba</div>
-          <div class="leader-title">Chief Executive Officer</div>
-          <div class="leader-quote">"UNOC is committed to developing Uganda's petroleum resources sustainably, ensuring maximum value creation for every Ugandan."</div>
-          <p style="font-size:14px;line-height:1.7;color:var(--muted)">Mr. Katamba leads Uganda's national oil company with a mandate to advance commercial petroleum interests, govern joint ventures, and position Uganda as a competitive energy destination in East Africa.</p>
-        </div>
-      </div>
-      <!-- Leaders -->
-      <div class="leader-card fade-in">
-        <img class="leader-img" src="Herbert-Magyezi-Mugizi-1.jpg" alt="Herbert Magyezi Mugizi">
-        <div class="leader-info">
-          <div class="leader-dept">Legal &amp; Compliance</div>
-          <div class="leader-name">Herbert Magyezi Mugizi</div>
-          <div class="leader-title">Director, Legal &amp; Regulatory Affairs</div>
-        </div>
-      </div>
-      <div class="leader-card fade-in">
-        <img class="leader-img" src="Gorrettie-Justine-Isenyi.jpg" alt="Gorrettie Justine Isenyi">
-        <div class="leader-info">
-          <div class="leader-dept">Corporate Affairs</div>
-          <div class="leader-name">Gorrettie Justine Isenyi</div>
-          <div class="leader-title">Director, Corporate Affairs &amp; Communications</div>
-        </div>
-      </div>
-      <div class="leader-card fade-in">
-        <img class="leader-img" src="Dr_-Ivan-Lule.jpg" alt="Dr. Ivan Lule">
-        <div class="leader-info">
-          <div class="leader-dept">Technical</div>
-          <div class="leader-name">Dr. Ivan Lule</div>
-          <div class="leader-title">Director, Technical Operations</div>
-        </div>
-      </div>
-      <div class="leader-card fade-in">
-        <img class="leader-img" src="Moses-Kabanda.jpg" alt="Moses Kabanda">
-        <div class="leader-info">
-          <div class="leader-dept">Finance</div>
-          <div class="leader-name">Moses Kabanda</div>
-          <div class="leader-title">Director, Finance &amp; Business Development</div>
-        </div>
-      </div>
-      <div class="leader-card fade-in">
-        <img class="leader-img" src="Simon-Echegu.jpg" alt="Simon Echegu">
-        <div class="leader-info">
-          <div class="leader-dept">Operations</div>
-          <div class="leader-name">Simon Echegu</div>
-          <div class="leader-title">Director, Commercial &amp; Downstream</div>
-        </div>
-      </div>
-      <div class="leader-card fade-in">
-        <img class="leader-img" src="Samantha-Muhwezi-Kassami.jpg" alt="Samantha Muhwezi Kassami">
-        <div class="leader-info">
-          <div class="leader-dept">Strategy</div>
-          <div class="leader-name">Samantha Muhwezi Kassami</div>
-          <div class="leader-title">Strategy &amp; Innovation</div>
-        </div>
-      </div>
-      <div class="leader-card fade-in">
-        <img class="leader-img" src="Zulaika-Mirembe-Kasajja.jpg" alt="Zulaika Mirembe Kasajja">
-        <div class="leader-info">
-          <div class="leader-dept">Human Capital</div>
-          <div class="leader-name">Zulaika Mirembe Kasajja</div>
-          <div class="leader-title">Director, Human Capital &amp; Administration</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── PARTNERS ── -->
-<section class="partners" id="partners">
-  <div class="container">
-    <div class="section-eyebrow">Joint Venture Partners</div>
-    <h2 class="section-title">World-Class Partners<br>in Uganda's Growth</h2>
+<!-- ─────────────── PARTNERS ─────────────── -->
+<section id="partners">
+  <div class="wrap">
+    <div class="section-label">Joint Venture Partners</div>
+    <h2>World-Class Partners<br>in Uganda's Growth</h2>
     <div class="divider"></div>
-    <p class="section-sub">UNOC collaborates with leading global energy companies to develop Uganda's petroleum resources, bringing world-class technology, capital and expertise.</p>
-    <div class="partners-logos">
-      <div class="partner-tile fade-in">
+    <p class="lead">UNOC collaborates with leading international energy companies — combining global expertise and capital with Uganda's national interest.</p>
+    <div class="partners-grid">
+      <div class="partner-tile reveal delay-1" onclick="showToast('🤝','TotalEnergies','Leading the Tilenga Project — one of Africa\'s largest upstream investments.','info')">
         <img src="TotalEnergies.png" alt="TotalEnergies">
         <div class="partner-role">Tilenga Project Operator</div>
-        <p class="partner-desc">TotalEnergies EP Uganda operates the Tilenga Project — one of the largest upstream investments in sub-Saharan Africa, developing blocks 1, 1A, 2 and 3A in the Albertine Graben.</p>
+        <p>TotalEnergies EP Uganda operates the Tilenga Project in Blocks 1, 1A, 2 and 3A — developing the Jobi-Rii, Gunya and Ngiri fields towards First Oil.</p>
       </div>
-      <div class="partner-tile fade-in">
+      <div class="partner-tile reveal delay-2" onclick="showToast('🤝','CNOOC Uganda','Operating the Kingfisher Area Development in Block 2 of the Albertine Graben.','info')">
         <img src="p-cnoc-ug.jpg" alt="CNOOC Uganda Limited">
         <div class="partner-role">Kingfisher Area Operator</div>
-        <p class="partner-desc">CNOOC Uganda Limited operates the Kingfisher Area Development (KAD) in Block 2 — covering the Kingfisher and Kakindo fields in one of East Africa's most significant oil developments.</p>
+        <p>CNOOC Uganda Limited operates the Kingfisher Area Development (KAD) covering the Kingfisher and Kakindo fields in Block 2 of the Albertine Graben.</p>
       </div>
-      <div class="partner-tile fade-in">
-        <img src="One-petro-123.jpg" alt="UNOC and Vitol / UNOC Partners">
+      <div class="partner-tile reveal delay-3" onclick="showToast('🤝','UNOC Partners','Strategic commercial partnerships for offtake, trading and downstream activities.','info')">
+        <img src="One-petro-123.jpg" alt="Strategic Commercial Partners">
         <div class="partner-role">Strategic Commercial Partners</div>
-        <p class="partner-desc">UNOC engages with a range of strategic commercial partners for offtake, trading and downstream activities — ensuring Uganda's oil reaches international markets efficiently and competitively.</p>
+        <p>UNOC engages strategic commercial partners for crude oil offtake, trading and downstream activities — ensuring Uganda's oil reaches global markets competitively.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── OUR PEOPLE ── -->
-<section class="people" id="people">
-  <div class="container">
-    <div class="section-eyebrow">Our People</div>
-    <h2 class="section-title" style="max-width:480px">Uganda's Oil &amp; Gas Talent, Built from Within</h2>
+<!-- ─────────────── LEADERSHIP ─────────────── -->
+<section id="leadership" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="leadership-header">
+      <div>
+        <div class="section-label">Executive Leadership</div>
+        <h2>Guided by Experienced<br>Leadership</h2>
+        <div class="divider"></div>
+      </div>
+      <p class="lead">Our leadership team brings deep expertise in petroleum law, engineering, finance and operations — combining international experience with an unwavering commitment to Uganda's development.</p>
+    </div>
+    <div class="leaders-grid">
+      <!-- FEATURED CEO -->
+      <div class="leader-card leader-featured reveal-l" onclick="openLeaderModal({name:'Mathias Katamba',title:'Chief Executive Officer',dept:'Chief Executive',photo:'Mathias-Katamba.jpg',bio:'Mr. Mathias Katamba leads UNOC with a mandate to advance Uganda\'s commercial petroleum interests, govern joint venture partnerships, and position Uganda as a competitive energy destination in East Africa. He brings extensive experience in financial services, banking and corporate governance, having previously served as CEO of Housing Finance Bank Uganda. He holds governance and leadership responsibilities across UNOC\'s subsidiaries including URHC and UPC.',facts:[['Sector','Oil & Gas / Banking'],['Experience','20+ years'],['Education','Masters, Finance'],['Focus','Commercial &amp; JV Governance']]})">
+        <img class="leader-img" src="Mathias-Katamba.jpg" alt="Mathias Katamba">
+        <div class="leader-info">
+          <div class="leader-tag">Chief Executive</div>
+          <div class="leader-name">Mathias Katamba</div>
+          <div class="leader-role">Chief Executive Officer</div>
+          <div class="ceo-quote">"UNOC is committed to developing Uganda's petroleum resources sustainably, ensuring maximum value creation for every Ugandan."</div>
+          <p style="font-size:14px;line-height:1.7;color:var(--muted)">Mr. Katamba leads the national oil company with responsibility for commercial petroleum interests, JV governance and building Uganda's petroleum sector capacity.</p>
+          <div style="margin-top:18px"><span class="btn btn-secondary btn-sm" style="display:inline-flex">View Full Profile →</span></div>
+        </div>
+      </div>
+      <!-- Directors -->
+      <div class="leader-card reveal delay-1" onclick="openLeaderModal({name:'Herbert Magyezi Mugizi',title:'Director, Legal &amp; Regulatory Affairs',dept:'Legal &amp; Compliance',photo:'Herbert-Magyezi-Mugizi-1.jpg',bio:'Herbert Magyezi Mugizi oversees all legal, regulatory and compliance matters at UNOC. He provides legal guidance on production sharing agreements, joint venture operations, contracts and regulatory frameworks governing Uganda\'s petroleum sector. He is a practising advocate with extensive experience in commercial and energy law.',facts:[['Dept','Legal &amp; Regulatory'],['Expertise','Petroleum Law'],['Qualification','LLB, LLM'],['JV Role','PSA Compliance']]})">
+        <img class="leader-img" src="Herbert-Magyezi-Mugizi-1.jpg" alt="Herbert Magyezi Mugizi">
+        <div class="leader-info">
+          <div class="leader-tag">Legal &amp; Compliance</div>
+          <div class="leader-name">Herbert Magyezi Mugizi</div>
+          <div class="leader-role">Director, Legal &amp; Regulatory Affairs</div>
+        </div>
+      </div>
+      <div class="leader-card reveal delay-2" onclick="openLeaderModal({name:'Gorrettie Justine Isenyi',title:'Director, Corporate Affairs &amp; Communications',dept:'Corporate Affairs',photo:'Gorrettie-Justine-Isenyi.jpg',bio:'Gorrettie Justine Isenyi leads UNOC\'s corporate affairs, communications and stakeholder engagement functions. She drives the company\'s public image strategy, media relations, community engagement and internal communications — ensuring transparent and effective communication across all stakeholder groups.',facts:[['Dept','Corporate Affairs'],['Expertise','PR &amp; Comms'],['Focus','Stakeholder Engagement'],['Scope','Media, Community, Brand']]})">
+        <img class="leader-img" src="Gorrettie-Justine-Isenyi.jpg" alt="Gorrettie Justine Isenyi">
+        <div class="leader-info">
+          <div class="leader-tag">Corporate Affairs</div>
+          <div class="leader-name">Gorrettie Justine Isenyi</div>
+          <div class="leader-role">Director, Corporate Affairs &amp; Communications</div>
+        </div>
+      </div>
+      <div class="leader-card reveal delay-1" onclick="openLeaderModal({name:'Dr. Ivan Lule',title:'Director, Technical Operations',dept:'Technical',photo:'Dr_-Ivan-Lule.jpg',bio:'Dr. Ivan Lule oversees UNOC\'s technical and operational functions, providing engineering and petroleum technical oversight across the Tilenga, Kingfisher and EACOP projects. He brings deep expertise in petroleum engineering and has represented UNOC\'s technical interests in joint venture operating committees.',facts:[['Dept','Technical Operations'],['Expertise','Petroleum Engineering'],['Qualification','PhD, Engineering'],['Scope','Tilenga, KAD, EACOP']]})">
+        <img class="leader-img" src="Dr_-Ivan-Lule.jpg" alt="Dr. Ivan Lule">
+        <div class="leader-info">
+          <div class="leader-tag">Technical</div>
+          <div class="leader-name">Dr. Ivan Lule</div>
+          <div class="leader-role">Director, Technical Operations</div>
+        </div>
+      </div>
+      <div class="leader-card reveal delay-2" onclick="openLeaderModal({name:'Moses Kabanda',title:'Director, Finance &amp; Business Development',dept:'Finance',photo:'Moses-Kabanda.jpg',bio:'Moses Kabanda leads UNOC\'s finance, accounting and business development functions. He oversees the company\'s financial planning, treasury management, JV cost and expenditure monitoring, and business development initiatives across the upstream and midstream portfolio.',facts:[['Dept','Finance &amp; BD'],['Expertise','Corporate Finance'],['Focus','JV Accounting &amp; Treasury'],['Qualification','CPA, MBA']]})">
+        <img class="leader-img" src="Moses-Kabanda.jpg" alt="Moses Kabanda">
+        <div class="leader-info">
+          <div class="leader-tag">Finance</div>
+          <div class="leader-name">Moses Kabanda</div>
+          <div class="leader-role">Director, Finance &amp; Business Development</div>
+        </div>
+      </div>
+      <div class="leader-card reveal delay-3" onclick="openLeaderModal({name:'Simon Echegu',title:'Director, Commercial &amp; Downstream',dept:'Commercial',photo:'Simon-Echegu.jpg',bio:'Simon Echegu manages UNOC\'s commercial and downstream activities, including crude oil offtake strategy, commercial negotiations with JV partners and trading counterparties, and development of downstream business opportunities for Uganda\'s petroleum sector.',facts:[['Dept','Commercial &amp; Downstream'],['Expertise','Oil Trading &amp; Commercial'],['Focus','Offtake &amp; Market Strategy'],['Scope','Upstream to Downstream']]})">
+        <img class="leader-img" src="Simon-Echegu.jpg" alt="Simon Echegu">
+        <div class="leader-info">
+          <div class="leader-tag">Commercial</div>
+          <div class="leader-name">Simon Echegu</div>
+          <div class="leader-role">Director, Commercial &amp; Downstream</div>
+        </div>
+      </div>
+      <div class="leader-card reveal delay-1" onclick="openLeaderModal({name:'Samantha Muhwezi Kassami',title:'Strategy &amp; Innovation',dept:'Strategy',photo:'Samantha-Muhwezi-Kassami.jpg',bio:'Samantha Muhwezi Kassami leads UNOC\'s strategy and innovation functions — developing the company\'s long-term strategic direction, identifying new business opportunities, and driving a culture of innovation across all UNOC operations and subsidiaries.',facts:[['Dept','Strategy &amp; Innovation'],['Focus','Long-term Strategy'],['Expertise','Business Development'],['Scope','Group-wide']]})">
+        <img class="leader-img" src="Samantha-Muhwezi-Kassami.jpg" alt="Samantha Muhwezi Kassami">
+        <div class="leader-info">
+          <div class="leader-tag">Strategy</div>
+          <div class="leader-name">Samantha Muhwezi Kassami</div>
+          <div class="leader-role">Strategy &amp; Innovation</div>
+        </div>
+      </div>
+      <div class="leader-card reveal delay-2" onclick="openLeaderModal({name:'Zulaika Mirembe Kasajja',title:'Director, Human Capital &amp; Administration',dept:'Human Capital',photo:'Zulaika-Mirembe-Kasajja.jpg',bio:'Zulaika Mirembe Kasajja leads UNOC\'s human capital strategy — overseeing talent acquisition, workforce development, performance management, employee relations and administration. She champions UNOC\'s internship and graduate programmes and drives the company\'s commitment to building a world-class Ugandan petroleum workforce.',facts:[['Dept','Human Capital &amp; Admin'],['Focus','Talent &amp; Development'],['Initiative','Internship Programme'],['Scope','500+ staff &amp; contractors']]})">
+        <img class="leader-img" src="Zulaika-Mirembe-Kasajja.jpg" alt="Zulaika Mirembe Kasajja">
+        <div class="leader-info">
+          <div class="leader-tag">Human Capital</div>
+          <div class="leader-name">Zulaika Mirembe Kasajja</div>
+          <div class="leader-role">Director, Human Capital &amp; Administration</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── PEOPLE ─────────────── -->
+<section id="people" style="padding:0">
+  <div class="wrap" style="padding-top:96px;padding-bottom:0">
+    <div class="section-label">Our People</div>
+    <h2>Uganda's Petroleum<br>Talent, Built Within</h2>
     <div class="divider"></div>
-    <div class="people-grid">
+  </div>
+  <div class="wrap" style="padding-top:0">
+    <div class="people-split reveal">
       <div class="people-visual">
         <img src="our-people.jpg" alt="UNOC field professionals">
-        <div class="people-visual-overlay"></div>
+        <div class="people-visual-grad"></div>
       </div>
-      <div class="people-content">
-        <div class="section-eyebrow">Human Capital</div>
-        <h3 class="section-title" style="color:#fff;font-size:32px">A Team Built for the Future</h3>
-        <p class="section-sub">UNOC invests heavily in developing Ugandan petroleum professionals — through international secondments, internship programmes, postgraduate sponsorships and structured leadership pipelines.</p>
-        <div class="people-stats">
-          <div>
-            <div class="p-stat-num">500+</div>
-            <div class="p-stat-label">UNOC employees &amp; contractors</div>
+      <div class="people-panel">
+        <div class="section-label">Human Capital</div>
+        <h2 style="font-size:clamp(26px,3vw,36px)">A Team Built<br>for the Future</h2>
+        <p class="lead">UNOC invests in developing Ugandan petroleum professionals through international secondments, internship programmes and structured leadership pipelines.</p>
+        <div class="p-stats">
+          <div class="p-stat">
+            <div class="metric-num"><span class="count-inv" data-target="500">0</span>+</div>
+            <div class="metric-label">Employees &amp; contractors</div>
           </div>
-          <div>
-            <div class="p-stat-num">95%</div>
-            <div class="p-stat-label">Ugandan workforce</div>
+          <div class="p-stat">
+            <div class="metric-num"><span class="count-inv" data-target="95">0</span>%</div>
+            <div class="metric-label">Ugandan workforce</div>
           </div>
-          <div>
-            <div class="p-stat-num">40+</div>
-            <div class="p-stat-label">International secondments</div>
+          <div class="p-stat">
+            <div class="metric-num"><span class="count-inv" data-target="40">0</span>+</div>
+            <div class="metric-label">International secondments</div>
           </div>
-          <div>
-            <div class="p-stat-num">200+</div>
-            <div class="p-stat-label">Interns supported</div>
+          <div class="p-stat">
+            <div class="metric-num"><span class="count-inv" data-target="200">0</span>+</div>
+            <div class="metric-label">Interns supported</div>
           </div>
         </div>
-        <div class="people-values">
-          <div class="value-row">Graduate &amp; internship recruitment programmes</div>
-          <div class="value-row">Secondments to TotalEnergies, CNOOC &amp; EACOP</div>
-          <div class="value-row">STEM scholarships &amp; technical training</div>
-          <div class="value-row">Women in energy leadership initiatives</div>
-          <div class="value-row">Makerere University oil &amp; gas partnerships</div>
+        <ul class="values-list">
+          <li>Graduate &amp; internship recruitment programmes</li>
+          <li>Secondments to TotalEnergies, CNOOC &amp; EACOP</li>
+          <li>STEM scholarships &amp; technical training</li>
+          <li>Women in energy leadership initiatives</li>
+          <li>Makerere University oil &amp; gas partnerships</li>
+        </ul>
+        <div style="margin-top:32px">
+          <button class="btn btn-yellow btn-md" onclick="scrollTo('#careers')">Explore Careers →</button>
         </div>
       </div>
     </div>
   </div>
+  <div style="padding-bottom:96px"></div>
 </section>
 
-<!-- ── LOCAL CONTENT ── -->
-<section class="local" id="local-content">
-  <div class="container">
-    <div class="section-eyebrow">Local Content</div>
-    <h2 class="section-title">Maximising Ugandan Value</h2>
+<!-- ─────────────── LOCAL CONTENT ─────────────── -->
+<section id="local" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="section-label">Local Content</div>
+    <h2>Maximising<br>Ugandan Value</h2>
     <div class="divider"></div>
-    <p class="section-sub">UNOC is committed to ensuring that Uganda's petroleum development generates lasting socio-economic benefits for Ugandan citizens, businesses and communities.</p>
-    <div class="local-grid">
-      <div class="local-card fade-in">
-        <div class="local-card-num">01</div>
+    <p class="lead">UNOC ensures Uganda's petroleum development generates lasting socio-economic benefits for citizens, businesses and communities across the country.</p>
+    <div class="lc-grid">
+      <div class="lc-card reveal delay-1">
+        <div class="lc-num">01</div>
         <div class="lc-icon">🏭</div>
-        <h3>Ugandan Business Opportunities</h3>
-        <p>UNOC works with the National Content Secretariat and IOC partners to ensure Ugandan companies access contracts in catering, construction, logistics, transportation, equipment supply and professional services across all project phases.</p>
+        <h3>Ugandan Business<br>Opportunities</h3>
+        <p>Working with the National Content Secretariat and IOC partners to ensure Ugandan companies access contracts in catering, construction, logistics, transportation and professional services across all project phases.</p>
       </div>
-      <div class="local-card fade-in">
-        <div class="local-card-num">02</div>
+      <div class="lc-card reveal delay-2">
+        <div class="lc-num">02</div>
         <div class="lc-icon">🎓</div>
-        <h3>Skills &amp; Workforce Development</h3>
-        <p>Through the UNOC Internship Programme, secondments and the Makerere University partnership, UNOC is building a world-ready generation of Ugandan petroleum engineers, geologists, economists and lawyers.</p>
+        <h3>Skills &amp; Workforce<br>Development</h3>
+        <p>Through the UNOC Internship Programme, international secondments and the Makerere University partnership, UNOC builds world-ready Ugandan petroleum engineers, geologists, economists and lawyers.</p>
       </div>
-      <div class="local-card fade-in">
-        <div class="local-card-num">03</div>
+      <div class="lc-card reveal delay-3">
+        <div class="lc-num">03</div>
         <div class="lc-icon">🏘️</div>
-        <h3>Community Investment</h3>
+        <h3>Community<br>Investment</h3>
         <p>UNOC's CSR programmes support host communities in Hoima, Kikuube and Buliisa districts — investing in health, clean water, education infrastructure and livelihood programmes alongside petroleum operations.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── SUSTAINABILITY ── -->
-<section class="sustainability" id="sustainability">
-  <div class="container">
-    <div class="section-eyebrow">Sustainability &amp; ESG</div>
-    <h2 class="section-title">Responsible Development</h2>
+<!-- ─────────────── SUSTAINABILITY ─────────────── -->
+<section id="sustainability">
+  <div class="wrap">
+    <div class="section-label">Sustainability &amp; ESG</div>
+    <h2>Responsible<br>Development</h2>
     <div class="divider"></div>
-    <div class="sust-grid">
+    <div class="sust-grid reveal">
       <div class="sust-left">
         <h3>Balancing Growth with Environmental Stewardship</h3>
-        <p>UNOC is committed to responsible petroleum development that protects Uganda's natural heritage while delivering economic transformation. We integrate environmental, social and governance principles into every stage of our operations.</p>
+        <p>UNOC integrates environmental, social and governance principles into every stage of operations — protecting Uganda's natural heritage while delivering economic transformation.</p>
         <div class="sust-pillars">
           <div class="sust-pillar">
-            <div class="sust-pillar-icon">🌿</div>
+            <div class="sust-pillar-ico">🌿</div>
             <div>
               <h4>Environment</h4>
               <p>Biodiversity protection, ESIA compliance, zero-flaring commitments and conservation partnerships in the Albertine Rift.</p>
             </div>
           </div>
           <div class="sust-pillar">
-            <div class="sust-pillar-icon">🤝</div>
+            <div class="sust-pillar-ico">🤝</div>
             <div>
               <h4>Social</h4>
               <p>Community investment, resettlement action plans, local employment and stakeholder engagement across all project areas.</p>
             </div>
           </div>
           <div class="sust-pillar">
-            <div class="sust-pillar-icon">📋</div>
+            <div class="sust-pillar-ico">📋</div>
             <div>
               <h4>Governance</h4>
               <p>EITI compliance, transparent revenue management, anti-corruption policies and parliamentary accountability.</p>
@@ -807,233 +1017,255 @@ footer{background:var(--black);color:rgba(255,255,255,0.7);padding:72px 0 0}
         </div>
       </div>
       <div class="sust-right">
-        <div class="sust-metric fade-in">
-          <div class="sust-metric-num">EITI</div>
-          <div class="sust-metric-label">Compliant transparency reporting on oil revenues and contracts</div>
+        <div class="sust-metric">
+          <div class="metric-num">EITI</div>
+          <div class="metric-label">Compliant reporting on oil revenues and contracts — full transparency to parliament and the public</div>
         </div>
-        <div class="sust-metric fade-in">
-          <div class="sust-metric-num">Zero</div>
-          <div class="sust-metric-label">Routine flaring commitment across all operational phases</div>
+        <div class="sust-metric">
+          <div class="metric-num">Zero</div>
+          <div class="metric-label">Routine flaring commitment across all operational phases — protecting communities and climate</div>
         </div>
-        <div class="sust-metric fade-in">
-          <div class="sust-metric-num">3,000+</div>
-          <div class="sust-metric-label">Community members supported through CSR programmes annually</div>
+        <div class="sust-metric">
+          <div class="metric-num">3,000+</div>
+          <div class="metric-label">Community members supported through CSR programmes annually across host districts</div>
         </div>
-        <div class="sust-metric fade-in">
-          <div class="sust-metric-num">ISO 9001</div>
-          <div class="sust-metric-label">Quality management systems certification across operations</div>
+        <div class="sust-metric">
+          <div class="metric-num">ISO 9001</div>
+          <div class="metric-label">Quality management systems certification maintained across core operations</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── NEWS ── -->
-<section class="news" id="news">
-  <div class="container">
-    <div class="news-header">
+<!-- ─────────────── FAQ ACCORDION ─────────────── -->
+<section class="faq-bg" id="faq">
+  <div class="wrap">
+    <div class="faq-grid">
       <div>
-        <div class="section-eyebrow">Newsroom</div>
-        <h2 class="section-title">Latest from UNOC</h2>
+        <div class="section-label">FAQs</div>
+        <h2>Common<br>Questions</h2>
+        <div class="divider"></div>
+        <p class="lead">Everything you need to know about UNOC, Uganda's petroleum sector and how to engage with us.</p>
+        <div style="margin-top:32px">
+          <button class="btn btn-primary btn-md" onclick="scrollTo('#contact')">Ask Us Directly →</button>
+        </div>
       </div>
-      <a href="#" class="btn btn-ghost">View All News →</a>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">What is UNOC's role in Uganda's oil sector?<span class="faq-arrow">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">UNOC is the Government of Uganda's commercial instrument in the petroleum sector. It holds and manages the government's equity interests in upstream joint ventures (Tilenga and Kingfisher), and through its subsidiaries holds interests in the EACOP pipeline and the planned Uganda Oil Refinery.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">When is Uganda's First Oil expected?<span class="faq-arrow">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Both the Tilenga Project (operated by TotalEnergies) and Kingfisher Area Development (operated by CNOOC) are targeting First Oil in the mid-2020s. The EACOP pipeline, which will transport the crude oil to Tanzania's port of Tanga, is under construction in parallel.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">How can Ugandan businesses participate?<span class="faq-arrow">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Ugandan businesses can access opportunities through the National Content Secretariat (under the Petroleum Authority of Uganda) and through UNOC's own procurement processes. Categories include catering, security, civil construction, transport, equipment supply and professional services. Registration in the National Supplier Database is required.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">Does UNOC offer internship programmes?<span class="faq-arrow">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">Yes. UNOC runs an annual Graduate Internship Programme open to Ugandan graduates in petroleum engineering, geosciences, finance, law, IT and related fields. Applications are announced on the UNOC website and major job boards. UNOC also arranges international secondments to joint venture partner companies for senior technical staff.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">How can I access UNOC tenders?<span class="faq-arrow">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">All UNOC tenders are published on the UNOC website under the Tenders section and in the Uganda Gazette. UNOC follows the Public Procurement and Disposal of Public Assets (PPDA) Act, ensuring open, competitive and transparent procurement processes for all contracts.</div></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">How does UNOC manage environmental impact?<span class="faq-arrow">+</span></button>
+          <div class="faq-a"><div class="faq-a-inner">UNOC enforces ESIA (Environmental and Social Impact Assessment) compliance across all projects. We are committed to zero routine flaring, biodiversity protection in the Albertine Rift, and transparent EITI reporting. UNOC works closely with the National Environment Management Authority (NEMA) and international environmental standards bodies.</div></div>
+        </div>
+      </div>
     </div>
-    <div class="news-grid">
-      <div class="news-card featured fade-in">
-        <img class="news-img" src="1772798855169.jpeg" alt="Tilenga construction update">
+  </div>
+</section>
+
+<!-- ─────────────── NEWS ─────────────── -->
+<section class="news-bg" id="news">
+  <div class="wrap">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:0">
+      <div>
+        <div class="section-label">Newsroom</div>
+        <h2>Latest from UNOC</h2>
+      </div>
+      <button class="btn btn-secondary btn-md" onclick="showToast('📰','Newsroom','Full newsroom coming soon — stay tuned!','info')">View All News →</button>
+    </div>
+    <div class="news-filter">
+      <button class="news-filter-btn active" onclick="filterNews(this,'all')">All</button>
+      <button class="news-filter-btn" onclick="filterNews(this,'operations')">Operations</button>
+      <button class="news-filter-btn" onclick="filterNews(this,'people')">People</button>
+      <button class="news-filter-btn" onclick="filterNews(this,'community')">Community</button>
+      <button class="news-filter-btn" onclick="filterNews(this,'reports')">Reports</button>
+    </div>
+    <div class="news-grid" id="newsGrid">
+      <div class="news-card featured" data-cat="operations" onclick="showToast('📰','Tilenga Milestone','Full article opening…','info')">
+        <div style="overflow:hidden"><img class="news-img" src="1772798855169.jpeg" alt="Tilenga construction"></div>
         <div class="news-body">
-          <div class="news-cat">Operations Update</div>
-          <h3 class="news-title">Tilenga Project Achieves Major Construction Milestone Ahead of First Oil</h3>
-          <p class="news-excerpt">The Tilenga Project has reached a significant engineering and procurement milestone as module fabrication and civil works at the Central Processing Facility accelerate towards first oil production.</p>
+          <div class="news-cat">Operations</div>
+          <h3 class="news-title">Tilenga Project Achieves Major CPF Construction Milestone Ahead of First Oil</h3>
+          <p class="news-excerpt">The Tilenga Central Processing Facility has reached a significant engineering and procurement milestone as module fabrication and civil works accelerate towards first oil production.</p>
           <div class="news-meta"><span>March 2025</span><span class="sep">·</span><span>5 min read</span></div>
-          <a href="#" class="read-more">Read full story →</a>
+          <a class="read-link" href="#">Read full story →</a>
         </div>
       </div>
-      <div class="news-card fade-in">
-        <img class="news-img" src="about-us.jpg" alt="UNOC Sports event">
-        <div class="news-body">
-          <div class="news-cat">Culture</div>
-          <h3 class="news-title">UNOC Celebrates 10th Anniversary with Staff Championship</h3>
-          <p class="news-excerpt">Marking a decade of excellence, UNOC held its annual sports day bringing together staff from across all business units.</p>
-          <div class="news-meta"><span>Feb 2025</span><span class="sep">·</span><span>3 min read</span></div>
-          <a href="#" class="read-more">Read →</a>
-        </div>
-      </div>
-      <div class="news-card fade-in">
-        <img class="news-img" src="our-people.jpg" alt="UNOC Graduate Programme">
+      <div class="news-card" data-cat="people" onclick="showToast('📰','UNOC Sports Day','Full article opening…','info')">
+        <div style="overflow:hidden"><img class="news-img" src="about-us.jpg" alt="UNOC Sports Day"></div>
         <div class="news-body">
           <div class="news-cat">People</div>
-          <h3 class="news-title">UNOC Opens 2025 Graduate Internship Applications</h3>
-          <p class="news-excerpt">Uganda's national oil company launches its annual graduate internship programme, targeting petroleum engineers, geologists and business graduates.</p>
-          <div class="news-meta"><span>Jan 2025</span><span class="sep">·</span><span>2 min read</span></div>
-          <a href="#" class="read-more">Read →</a>
+          <h3 class="news-title">UNOC Marks 10th Anniversary with Staff Sports Championship</h3>
+          <p class="news-excerpt">Staff from all business units came together to celebrate a decade of excellence at UNOC's annual sports day.</p>
+          <div class="news-meta"><span>Feb 2025</span><span class="sep">·</span><span>3 min</span></div>
+          <a class="read-link" href="#">Read →</a>
+        </div>
+      </div>
+      <div class="news-card" data-cat="people" onclick="showToast('📰','Internship Programme','Full article opening…','info')">
+        <div style="overflow:hidden"><img class="news-img" src="our-people.jpg" alt="Graduates"></div>
+        <div class="news-body">
+          <div class="news-cat">People</div>
+          <h3 class="news-title">2025 Graduate Internship Programme Applications Now Open</h3>
+          <p class="news-excerpt">UNOC launches its annual graduate internship intake targeting petroleum engineers, geoscientists and business graduates.</p>
+          <div class="news-meta"><span>Jan 2025</span><span class="sep">·</span><span>2 min</span></div>
+          <a class="read-link" href="#">Read →</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── CAREERS ── -->
-<section class="careers" id="careers">
+<!-- ─────────────── CAREERS ─────────────── -->
+<div class="careers-bg" id="careers">
   <div class="careers-inner">
     <div class="careers-grid">
       <div>
-        <div class="section-eyebrow">Careers</div>
-        <h2 class="section-title">Be Part of Uganda's<br>Energy Story</h2>
-        <div style="width:64px;height:3px;background:linear-gradient(to right,var(--red),var(--yellow));border-radius:2px;margin-bottom:24px"></div>
-        <p class="section-sub" style="margin-bottom:36px">UNOC recruits talented Ugandans who are passionate about transforming the country's petroleum resources into prosperity. We offer competitive packages, international exposure and meaningful work.</p>
-        <div class="people-values">
-          <div class="value-row">Competitive, performance-based compensation</div>
-          <div class="value-row">International secondments to Paris, Beijing &amp; London</div>
-          <div class="value-row">Fully funded postgraduate training</div>
-          <div class="value-row">Structured leadership development tracks</div>
-        </div>
-        <br>
-        <a href="#contact" class="btn btn-gold" style="margin-top:12px">Apply / Enquire →</a>
-      </div>
-      <div>
-        <div class="jobs-list">
-          <div class="job-item fade-in">
-            <div>
-              <div class="job-title">Petroleum Engineer – Upstream Operations</div>
-              <div class="job-meta">Full-time · Kampala / Hoima · Closes 31 Mar 2025</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div class="job-dept">Upstream</div>
-              <span class="apply-arrow">→</span>
-            </div>
-          </div>
-          <div class="job-item fade-in">
-            <div>
-              <div class="job-title">Legal Counsel – Commercial &amp; Contracts</div>
-              <div class="job-meta">Full-time · Kampala · Closes 15 Apr 2025</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div class="job-dept">Legal</div>
-              <span class="apply-arrow">→</span>
-            </div>
-          </div>
-          <div class="job-item fade-in">
-            <div>
-              <div class="job-title">Senior Finance Analyst – JV Accounting</div>
-              <div class="job-meta">Full-time · Kampala · Closes 30 Apr 2025</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div class="job-dept">Finance</div>
-              <span class="apply-arrow">→</span>
-            </div>
-          </div>
-          <div class="job-item fade-in">
-            <div>
-              <div class="job-title">Environment &amp; Sustainability Officer</div>
-              <div class="job-meta">Full-time · Hoima · Closes 30 Apr 2025</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div class="job-dept">ESG</div>
-              <span class="apply-arrow">→</span>
-            </div>
-          </div>
-          <div class="job-item fade-in">
-            <div>
-              <div class="job-title">2025 Graduate Internship Programme</div>
-              <div class="job-meta">12-month programme · Kampala · Open intake</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px">
-              <div class="job-dept">Graduate</div>
-              <span class="apply-arrow">→</span>
-            </div>
-          </div>
+        <div class="section-label">Careers at UNOC</div>
+        <h2 style="color:var(--inv-text)">Be Part of Uganda's<br>Energy Story</h2>
+        <div style="width:56px;height:3px;background:linear-gradient(to right,var(--red),var(--yellow));border-radius:2px;margin:20px 0 28px"></div>
+        <p class="lead">UNOC recruits passionate Ugandans committed to transforming the country's petroleum resources into prosperity. We offer competitive packages, international exposure and meaningful work.</p>
+        <ul class="values-list" style="margin-top:24px">
+          <li>Competitive, performance-based compensation</li>
+          <li>International secondments — Paris, Beijing &amp; London</li>
+          <li>Fully-funded postgraduate training</li>
+          <li>Structured leadership development tracks</li>
+          <li>Collaborative, diverse team culture</li>
+        </ul>
+        <div style="margin-top:36px;display:flex;gap:12px;flex-wrap:wrap">
+          <button class="btn btn-yellow btn-lg" onclick="openApply('General Application')">Apply Now →</button>
+          <button class="btn btn-ghost-dark btn-md" onclick="showToast('💼','Careers','Full careers portal launching soon!','info')">View All Roles</button>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── CTA BAND ── -->
-<div class="cta-band">
-  <div class="container">
-    <h2>Ready to Partner with Uganda's<br>National Oil Company?</h2>
-    <p>Whether you are an investor, supplier, job seeker or community partner — UNOC welcomes collaboration that creates shared value for Uganda.</p>
-    <div class="cta-actions">
-      <a href="#contact" class="btn btn-gold" style="font-size:15px;padding:15px 36px">Get in Touch →</a>
-      <a href="#about" class="btn btn-outline-white" style="font-size:15px;padding:15px 36px">Learn More</a>
+      <div class="jobs-list">
+        <div class="job-card" onclick="openApply('Petroleum Engineer – Upstream Operations')">
+          <div>
+            <div class="job-title">Petroleum Engineer – Upstream Operations</div>
+            <div class="job-meta">Full-time · Kampala / Hoima · Closes 31 Mar 2025</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="job-dept-tag">Upstream</span>
+            <span class="job-arrow">→</span>
+          </div>
+        </div>
+        <div class="job-card" onclick="openApply('Legal Counsel – Commercial & Contracts')">
+          <div>
+            <div class="job-title">Legal Counsel – Commercial &amp; Contracts</div>
+            <div class="job-meta">Full-time · Kampala · Closes 15 Apr 2025</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="job-dept-tag">Legal</span>
+            <span class="job-arrow">→</span>
+          </div>
+        </div>
+        <div class="job-card" onclick="openApply('Senior Finance Analyst – JV Accounting')">
+          <div>
+            <div class="job-title">Senior Finance Analyst – JV Accounting</div>
+            <div class="job-meta">Full-time · Kampala · Closes 30 Apr 2025</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="job-dept-tag">Finance</span>
+            <span class="job-arrow">→</span>
+          </div>
+        </div>
+        <div class="job-card" onclick="openApply('Environment & Sustainability Officer')">
+          <div>
+            <div class="job-title">Environment &amp; Sustainability Officer</div>
+            <div class="job-meta">Full-time · Hoima · Closes 30 Apr 2025</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="job-dept-tag">ESG</span>
+            <span class="job-arrow">→</span>
+          </div>
+        </div>
+        <div class="job-card" onclick="openApply('2025 Graduate Internship Programme')">
+          <div>
+            <div class="job-title">2025 Graduate Internship Programme</div>
+            <div class="job-meta">12-month · Kampala · Open intake</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span class="job-dept-tag">Graduate</span>
+            <span class="job-arrow">→</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ── CONTACT ── -->
-<section class="contact" id="contact">
-  <div class="container">
-    <div class="section-eyebrow">Contact Us</div>
-    <h2 class="section-title">We'd Love to Hear from You</h2>
+<!-- ─────────────── CTA BAND ─────────────── -->
+<div class="cta-band">
+  <div class="wrap">
+    <h2>Ready to Partner with<br>Uganda's National Oil Company?</h2>
+    <p>Whether you are an investor, supplier, job seeker or community partner — UNOC welcomes collaboration that creates shared value for Uganda.</p>
+    <div class="cta-actions">
+      <button class="btn btn-yellow btn-lg" onclick="scrollTo('#contact')">Get in Touch →</button>
+      <button class="btn btn-ghost-dark btn-lg" onclick="scrollTo('#about')">Learn More</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────── CONTACT ─────────────── -->
+<section id="contact">
+  <div class="wrap">
+    <div class="section-label">Contact Us</div>
+    <h2>We'd Love to<br>Hear from You</h2>
     <div class="divider"></div>
     <div class="contact-grid">
-      <div>
-        <div class="contact-info">
-          <h3>Uganda National Oil Company Limited</h3>
-          <p>Headquartered in Kampala, Uganda, UNOC welcomes enquiries from investors, contractors, media, government counterparts and prospective employees.</p>
-        </div>
+      <div class="reveal-l">
+        <h3 style="font-family:'Sen',sans-serif;font-size:22px;font-weight:800;margin-bottom:14px">Uganda National Oil Company Limited</h3>
+        <p style="font-size:15px;line-height:1.8;color:var(--muted);margin-bottom:32px">Headquartered in Kampala, Uganda, UNOC welcomes enquiries from investors, contractors, media, government counterparts and prospective employees.</p>
         <div class="contact-details">
-          <div class="contact-item">
-            <div class="contact-item-icon">📍</div>
-            <div class="contact-item-text">
-              <strong>Head Office</strong>
-              <span>Amber House, 29-33 Kampala Road, Kampala, Uganda</span>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-item-icon">📞</div>
-            <div class="contact-item-text">
-              <strong>Main Switchboard</strong>
-              <span>+256 (0) 312 394 500</span>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-item-icon">✉️</div>
-            <div class="contact-item-text">
-              <strong>General Enquiries</strong>
-              <span>info@unoc.co.ug</span>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-item-icon">💼</div>
-            <div class="contact-item-text">
-              <strong>Careers &amp; Internships</strong>
-              <span>careers@unoc.co.ug</span>
-            </div>
-          </div>
-          <div class="contact-item">
-            <div class="contact-item-icon">📢</div>
-            <div class="contact-item-text">
-              <strong>Media &amp; Communications</strong>
-              <span>communications@unoc.co.ug</span>
-            </div>
-          </div>
+          <div class="contact-item"><div class="c-icon">📍</div><div class="c-text"><strong>Head Office</strong><span>Amber House, 29-33 Kampala Road, Kampala, Uganda</span></div></div>
+          <div class="contact-item"><div class="c-icon">📞</div><div class="c-text"><strong>Main Switchboard</strong><span>+256 (0) 312 394 500</span></div></div>
+          <div class="contact-item"><div class="c-icon">✉️</div><div class="c-text"><strong>General Enquiries</strong><span>info@unoc.co.ug</span></div></div>
+          <div class="contact-item"><div class="c-icon">💼</div><div class="c-text"><strong>Careers &amp; Internships</strong><span>careers@unoc.co.ug</span></div></div>
+          <div class="contact-item"><div class="c-icon">📢</div><div class="c-text"><strong>Media &amp; Communications</strong><span>communications@unoc.co.ug</span></div></div>
         </div>
       </div>
-      <div class="contact-form fade-in">
-        <h3 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:24px">Send Us a Message</h3>
+      <div class="contact-form-box reveal-r">
+        <h3>Send Us a Message</h3>
         <div class="form-row">
-          <div class="form-group">
-            <label>First Name</label>
-            <input type="text" placeholder="John">
+          <div class="form-group" id="cf-fname">
+            <label>First Name *</label>
+            <input type="text" id="cf-first" placeholder="Jane">
+            <span class="form-error">Required</span>
           </div>
-          <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" placeholder="Doe">
+          <div class="form-group" id="cf-lname">
+            <label>Last Name *</label>
+            <input type="text" id="cf-last" placeholder="Doe">
+            <span class="form-error">Required</span>
           </div>
         </div>
-        <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" placeholder="you@company.com">
+        <div class="form-group" id="cf-email-grp">
+          <label>Email Address *</label>
+          <input type="email" id="cf-email" placeholder="you@company.com">
+          <span class="form-error">Please enter a valid email</span>
         </div>
         <div class="form-group">
           <label>Organisation</label>
-          <input type="text" placeholder="Company / Institution">
+          <input type="text" id="cf-org" placeholder="Company / Institution">
         </div>
         <div class="form-group">
           <label>Subject</label>
-          <select>
+          <select id="cf-subject">
             <option>General Enquiry</option>
             <option>Investment &amp; Partnerships</option>
             <option>Tenders &amp; Procurement</option>
@@ -1042,30 +1274,29 @@ footer{background:var(--black);color:rgba(255,255,255,0.7);padding:72px 0 0}
             <option>Community &amp; CSR</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Message</label>
-          <textarea placeholder="Tell us how we can help you…"></textarea>
+        <div class="form-group" id="cf-msg-grp">
+          <label>Message *</label>
+          <textarea id="cf-message" rows="4" placeholder="How can we help you?"></textarea>
+          <span class="form-error">Please write your message</span>
         </div>
-        <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:15px;padding:14px" onclick="this.textContent='Message Sent ✓';this.style.background='#15803D'">Send Message</button>
+        <button class="btn btn-primary btn-lg" style="width:100%;margin-top:4px" onclick="submitContact()">Send Message →</button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── FOOTER ── -->
+<!-- ─────────────── FOOTER ─────────────── -->
 <footer>
   <div class="footer-inner">
     <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <img src="unoc_logo.png" alt="UNOC">
-        </div>
-        <p class="footer-desc">Uganda National Oil Company Limited — the State's commercial instrument in the petroleum sector, developing Uganda's oil and gas resources for the prosperity of all Ugandans.</p>
+      <div>
+        <img src="unoc_logo.png" alt="UNOC" class="footer-logo" style="filter:brightness(1.15)">
+        <p class="footer-desc">Uganda National Oil Company Limited — the State's commercial instrument in the petroleum sector, developing Uganda's oil &amp; gas resources for the prosperity of all Ugandans.</p>
         <div class="footer-socials">
-          <button class="soc-btn">𝕏</button>
-          <button class="soc-btn">in</button>
-          <button class="soc-btn">▶</button>
-          <button class="soc-btn">f</button>
+          <button class="soc-btn" title="X / Twitter" onclick="showToast('𝕏','Twitter / X','Follow us @UNOCUganda for updates!','info')">𝕏</button>
+          <button class="soc-btn" title="LinkedIn" onclick="showToast('in','LinkedIn','Connect with UNOC on LinkedIn!','info')">in</button>
+          <button class="soc-btn" title="YouTube" onclick="showToast('▶','YouTube','Subscribe to UNOC Uganda on YouTube!','info')">▶</button>
+          <button class="soc-btn" title="Facebook" onclick="showToast('f','Facebook','Like UNOC on Facebook!','info')">f</button>
         </div>
       </div>
       <div class="footer-col">
@@ -1073,32 +1304,32 @@ footer{background:var(--black);color:rgba(255,255,255,0.7);padding:72px 0 0}
         <ul>
           <li><a href="#about">About UNOC</a></li>
           <li><a href="#leadership">Leadership</a></li>
-          <li><a href="#">Board of Directors</a></li>
-          <li><a href="#">Governance &amp; Compliance</a></li>
-          <li><a href="#">Annual Reports</a></li>
-          <li><a href="#">Our History</a></li>
+          <li><a href="#" onclick="showToast('📋','Board of Directors','Board profile page coming soon.','info');return false">Board of Directors</a></li>
+          <li><a href="#" onclick="showToast('📋','Governance','Governance documents coming soon.','info');return false">Governance &amp; Compliance</a></li>
+          <li><a href="#" onclick="showToast('📄','Annual Reports','Annual reports download coming soon.','info');return false">Annual Reports</a></li>
+          <li><a href="#faq">FAQs</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Operations</h4>
         <ul>
-          <li><a href="#operations">Tilenga Project</a></li>
-          <li><a href="#operations">Kingfisher Area</a></li>
-          <li><a href="#operations">EACOP Pipeline</a></li>
-          <li><a href="#operations">Uganda Oil Refinery</a></li>
-          <li><a href="#local-content">Local Content</a></li>
+          <li><a href="#operations" onclick="switchTab(document.querySelector('[data-tab=tilenga]'),'tilenga')">Tilenga Project</a></li>
+          <li><a href="#operations" onclick="switchTab(document.querySelector('[data-tab=kingfisher]'),'kingfisher')">Kingfisher Area</a></li>
+          <li><a href="#operations" onclick="switchTab(document.querySelector('[data-tab=eacop]'),'eacop')">EACOP Pipeline</a></li>
+          <li><a href="#operations" onclick="switchTab(document.querySelector('[data-tab=refinery]'),'refinery')">Uganda Oil Refinery</a></li>
+          <li><a href="#local">Local Content</a></li>
           <li><a href="#sustainability">Sustainability</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>Resources</h4>
         <ul>
-          <li><a href="#">Tenders &amp; Procurement</a></li>
+          <li><a href="#" onclick="showToast('📋','Tenders','Procurement portal opening soon.','info');return false">Tenders &amp; Procurement</a></li>
           <li><a href="#news">Newsroom</a></li>
           <li><a href="#careers">Careers</a></li>
-          <li><a href="#">Publications</a></li>
+          <li><a href="#" onclick="showToast('📄','Publications','Publications page coming soon.','info');return false">Publications</a></li>
           <li><a href="#contact">Contact Us</a></li>
-          <li><a href="#">Whistleblower Portal</a></li>
+          <li><a href="#" onclick="showToast('🔒','Whistleblower','Confidential reporting portal coming soon.','info');return false">Whistleblower Portal</a></li>
         </ul>
       </div>
     </div>
@@ -1115,65 +1346,245 @@ footer{background:var(--black);color:rgba(255,255,255,0.7);padding:72px 0 0}
 </footer>
 
 <script>
-/* THEME TOGGLE */
-const btn = document.getElementById('themeBtn');
-const html = document.documentElement;
+/* ═══════════════════════════════════
+   THEME
+═══════════════════════════════════ */
+const themeBtn = document.getElementById('themeBtn');
+const root = document.documentElement;
 const saved = localStorage.getItem('unoc-theme') || 'light';
-html.setAttribute('data-theme', saved);
-btn.textContent = saved === 'dark' ? '☀️' : '🌙';
-btn.addEventListener('click', () => {
-  const curr = html.getAttribute('data-theme');
-  const next = curr === 'light' ? 'dark' : 'light';
-  html.setAttribute('data-theme', next);
-  btn.textContent = next === 'dark' ? '☀️' : '🌙';
+root.setAttribute('data-theme', saved);
+themeBtn.textContent = saved === 'dark' ? '☀️' : '🌙';
+themeBtn.addEventListener('click', () => {
+  const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  root.setAttribute('data-theme', next);
+  themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
   localStorage.setItem('unoc-theme', next);
+  showToast(next === 'dark' ? '🌙' : '☀️', next === 'dark' ? 'Dark Mode' : 'Light Mode', 'Display mode changed.', 'info');
 });
 
-/* OPS TABS */
-document.querySelectorAll('.ops-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.ops-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.ops-panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+/* ═══════════════════════════════════
+   SCROLL PROGRESS + NAV
+═══════════════════════════════════ */
+const progressBar = document.getElementById('progress-bar');
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const total = document.body.scrollHeight - window.innerHeight;
+  progressBar.style.width = (scrolled / total * 100) + '%';
+  nav.classList.toggle('scrolled', scrolled > 20);
+  // Spy
+  const sections = document.querySelectorAll('section[id],[id]');
+  let current = '';
+  sections.forEach(s => { if (scrolled >= s.offsetTop - 100) current = s.id; });
+  document.querySelectorAll('#navLinks li').forEach(li => {
+    li.classList.remove('active');
+    const a = li.querySelector('a');
+    if (a && a.getAttribute('href') === '#' + current) li.classList.add('active');
   });
-});
-
-/* SCROLL ANIMATIONS */
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
+  // Reveal
+  document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight - 60) el.classList.add('visible');
   });
-}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  // Counter trigger
+  document.querySelectorAll('.count:not(.counted)').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight) animateCount(el, false);
+  });
+  document.querySelectorAll('.count-inv:not(.counted)').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight) animateCount(el, true);
+  });
+}, { passive: true });
 
-/* COUNTER ANIMATION */
-function animateCounter(el, target, suffix='') {
-  let start = 0;
+/* ═══════════════════════════════════
+   SMOOTH SCROLL
+═══════════════════════════════════ */
+function scrollTo(sel) {
+  const el = document.querySelector(sel);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ═══════════════════════════════════
+   MOBILE DRAWER
+═══════════════════════════════════ */
+function openDrawer() {
+  document.getElementById('mobileDrawer').classList.add('open');
+  document.getElementById('drawerOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('mobileDrawer').classList.remove('open');
+  document.getElementById('drawerOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ═══════════════════════════════════
+   OPS TABS
+═══════════════════════════════════ */
+function switchTab(btn, tab) {
+  document.querySelectorAll('.ops-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.ops-panel').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById('tab-' + tab);
+  if (panel) {
+    panel.classList.add('active');
+    panel.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => {
+      el.classList.remove('visible');
+      setTimeout(() => el.classList.add('visible'), 50);
+    });
+  }
+  // If called from footer, scroll to ops
+  if (!btn || !btn.closest('.ops-tabs-wrap')) {
+    const opsBtn = document.querySelector('[data-tab="' + tab + '"]');
+    if (opsBtn) { opsBtn.classList.add('active'); document.querySelectorAll('.ops-tab').forEach(t => { if(t !== opsBtn) t.classList.remove('active'); }); }
+    scrollTo('#operations');
+  }
+}
+
+/* ═══════════════════════════════════
+   LEADER MODAL
+═══════════════════════════════════ */
+function openLeaderModal(data) {
+  document.getElementById('modalPhoto').src = data.photo;
+  document.getElementById('modalPhoto').alt = data.name;
+  document.getElementById('modalName').textContent = data.name;
+  document.getElementById('modalTitle').textContent = data.title;
+  document.getElementById('modalDept').textContent = data.dept;
+  document.getElementById('modalBio').textContent = data.bio;
+  const factsEl = document.getElementById('modalFacts');
+  factsEl.innerHTML = data.facts.map(f => `<div class="modal-fact"><strong>${f[0]}</strong><span>${f[1]}</span></div>`).join('');
+  document.getElementById('leaderModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function handleModalClick(e) { if (e.target === e.currentTarget) closeModal(e.currentTarget.id); }
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal('leaderModal'); closeModal('applyModal'); closeDrawer(); } });
+
+/* ═══════════════════════════════════
+   APPLY MODAL
+═══════════════════════════════════ */
+function openApply(role) {
+  document.getElementById('applyRoleLabel').textContent = role;
+  ['apply-fname','apply-lname','apply-email','apply-phone','apply-cover'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  const cv = document.getElementById('apply-cv'); if(cv) cv.value = '';
+  document.querySelectorAll('#applyModal .form-group').forEach(g => g.classList.remove('error'));
+  document.getElementById('applyModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function submitApply() {
+  let valid = true;
+  const checks = [
+    { id: 'apply-fname', grp: 'fg-fname', test: v => v.trim().length > 0 },
+    { id: 'apply-lname', grp: 'fg-lname', test: v => v.trim().length > 0 },
+    { id: 'apply-email', grp: 'fg-email', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+    { id: 'apply-cv', grp: 'fg-cv', test: () => document.getElementById('apply-cv').files.length > 0 },
+  ];
+  checks.forEach(c => {
+    const el = document.getElementById(c.id);
+    const grp = document.getElementById(c.grp);
+    const pass = c.test(el ? el.value : '');
+    if (grp) grp.classList.toggle('error', !pass);
+    if (!pass) valid = false;
+  });
+  if (!valid) return;
+  closeModal('applyModal');
+  const role = document.getElementById('applyRoleLabel').textContent;
+  showToast('✅', 'Application Submitted!', `Your application for "${role}" has been received. We'll be in touch.`, 'success');
+}
+
+/* ═══════════════════════════════════
+   CONTACT FORM
+═══════════════════════════════════ */
+function submitContact() {
+  let valid = true;
+  const checks = [
+    { id: 'cf-first', grp: 'cf-fname', test: v => v.trim().length > 0 },
+    { id: 'cf-last', grp: 'cf-lname', test: v => v.trim().length > 0 },
+    { id: 'cf-email', grp: 'cf-email-grp', test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+    { id: 'cf-message', grp: 'cf-msg-grp', test: v => v.trim().length > 10 },
+  ];
+  checks.forEach(c => {
+    const el = document.getElementById(c.id);
+    const grp = document.getElementById(c.grp);
+    const pass = c.test(el ? el.value : '');
+    if (grp) grp.classList.toggle('error', !pass);
+    if (!pass) valid = false;
+  });
+  if (!valid) return;
+  const name = document.getElementById('cf-first').value;
+  ['cf-first','cf-last','cf-email','cf-org','cf-message'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+  showToast('✅', 'Message Sent!', `Thank you, ${name}. We'll respond within 2 business days.`, 'success');
+}
+
+/* ═══════════════════════════════════
+   FAQ ACCORDION
+═══════════════════════════════════ */
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+/* ═══════════════════════════════════
+   NEWS FILTER
+═══════════════════════════════════ */
+function filterNews(btn, cat) {
+  document.querySelectorAll('.news-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.news-card').forEach(card => {
+    const match = cat === 'all' || card.dataset.cat === cat;
+    card.style.display = match ? '' : 'none';
+    card.style.opacity = '0';
+    if (match) setTimeout(() => { card.style.transition = 'opacity .35s'; card.style.opacity = '1'; }, 30);
+  });
+}
+
+/* ═══════════════════════════════════
+   COUNTER ANIMATION
+═══════════════════════════════════ */
+function animateCount(el, integer) {
+  el.classList.add('counted');
+  const target = parseFloat(el.dataset.target);
+  const decimal = parseInt(el.dataset.decimal || '0');
   const duration = 1800;
-  const step = (timestamp) => {
-    if (!start) start = timestamp;
-    const progress = Math.min((timestamp - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = (Number.isInteger(target) ? Math.floor(eased * target) : (eased * target).toFixed(1)) + suffix;
-    if (progress < 1) requestAnimationFrame(step);
+  let start = null;
+  const step = ts => {
+    if (!start) start = ts;
+    const p = Math.min((ts - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    const val = eased * target;
+    el.textContent = decimal > 0 ? val.toFixed(decimal) : Math.floor(val);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = decimal > 0 ? target.toFixed(decimal) : target;
   };
   requestAnimationFrame(step);
 }
 
-/* NAV ACTIVE STATE */
-const sections = document.querySelectorAll('section[id], div[id]');
-window.addEventListener('scroll', () => {
-  let current = '';
-  sections.forEach(sec => {
-    if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
+/* ═══════════════════════════════════
+   TOAST NOTIFICATIONS
+═══════════════════════════════════ */
+function showToast(icon, title, msg, type = '') {
+  const wrap = document.getElementById('toastWrap');
+  const toast = document.createElement('div');
+  toast.className = 'toast' + (type ? ' ' + type : '');
+  toast.innerHTML = `<span class="toast-icon">${icon}</span><div class="toast-text"><strong>${title}</strong><span>${msg}</span></div>`;
+  wrap.appendChild(toast);
+  requestAnimationFrame(() => { requestAnimationFrame(() => toast.classList.add('show')); });
+  setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 4500);
+}
+
+/* ═══════════════════════════════════
+   INIT ON LOAD
+═══════════════════════════════════ */
+window.addEventListener('load', () => {
+  // Trigger initial reveal for above-fold elements
+  document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el => {
+    if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('visible');
   });
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    a.parentElement.classList.remove('active');
-    if (a.getAttribute('href') === '#' + current) a.parentElement.classList.add('active');
-  });
+  // Welcome toast
+  setTimeout(() => showToast('🇺🇬', 'Welcome to UNOC', 'Explore Uganda\'s petroleum future.', 'info'), 1200);
 });
 </script>
 </body>
